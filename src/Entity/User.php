@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="`user`")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("username")
+ * @UniqueEntity("email")
  */
 class User implements UserInterface, \Serializable
 {
@@ -21,6 +24,7 @@ class User implements UserInterface, \Serializable
 
     /**
      * @Assert\Email()
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
@@ -32,11 +36,13 @@ class User implements UserInterface, \Serializable
     private $username;
 
     /**
-     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255)
      */
     private $password;
 
+    /**
+     * @Assert\NotBlank()
+     */
     private $plainPassword;
 
     /**

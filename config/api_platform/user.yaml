@@ -1,0 +1,8 @@
+resources:
+  App\Entity\User:
+      collectionOperations:
+          get: ~
+          register:
+              method: 'POST'
+              path: '/users/register'
+              controller: 'App\Controller\Register'

@@ -5,4 +5,4 @@ resources:
           register:
               method: 'POST'
               path: '/users/register'
-              controller: 'App\Controller\Register'
+              controller: 'App\Controller\Security\Register'

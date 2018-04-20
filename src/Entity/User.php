@@ -2,18 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ApiResource(
+ *     attributes={
+ *          "normalization_context"={"groups"={"user", "user-read"}},
+ *          "denormalization_context"={"groups"={"user", "user-write"}}
+ *     }
+ * )
  * @ORM\Table(name="`user`")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("username")
  * @UniqueEntity("email")
  */
-class User implements UserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -25,23 +33,26 @@ class User implements UserInterface, \Serializable
     /**
      * @Assert\Email()
      * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user"})
      */
     private $email;
 
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=25, unique=true)
+     * @Groups({"user"})
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=64)
      */
     private $password;
 
     /**
      * @Assert\NotBlank()
+     * @Groups({"user-write"})
      */
     private $plainPassword;
 
@@ -51,8 +62,15 @@ class User implements UserInterface, \Serializable
     private $roles;
 
     /**
-     * User constructor.
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
+    private $confirmationToken;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active = false;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -116,59 +134,76 @@ class User implements UserInterface, \Serializable
         return $this->roles;
     }
 
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken($confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive($active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
     public function getSalt()
     {
         return null;
     }
 
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
     public function eraseCredentials()
     {
         $this->plainPassword = null;
     }
 
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
-     */
+    public function isEnabled()
+    {
+        return $this->active;
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
     public function serialize()
     {
         return serialize(array(
             $this->id,
             $this->username,
-            $this->password
+            $this->password,
+            $this->active
         ));
     }
 
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
-     */
     public function unserialize($serialized)
     {
         list(
             $this->id,
             $this->username,
-            $this->password
+            $this->password,
+            $this->active
             ) = unserialize($serialized, array('allowed_classes' => false));
     }
 }

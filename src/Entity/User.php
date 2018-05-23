@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *     attributes={
- *          "normalization_context"={"groups"={"user", "user-read"}},
- *          "denormalization_context"={"groups"={"user", "user-write"}}
+ *          "normalization_context"={"groups"={"user"}},
+ *          "denormalization_context"={"groups"={"user"}}
  *     }
  * )
  * @ORM\Table(name="`user`")
@@ -34,7 +34,6 @@ class User implements AdvancedUserInterface, \Serializable
      * @Assert\Email()
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user"})
      */
     private $email;
 
@@ -52,7 +51,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @Assert\NotBlank()
-     * @Groups({"user-write"})
      */
     private $plainPassword;
 

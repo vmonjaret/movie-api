@@ -23,10 +23,6 @@ class Register
         $password = $this->passwordEncoder->encodePassword($data, $data->getPlainPassword());
         $data->setPassword($password);
 
-        dump($data);
-
         return $data;
-//        $this->em->persist($data);
-//        $this->em->flush();
     }
 }

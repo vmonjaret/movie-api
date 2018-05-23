@@ -1,0 +1,37 @@
+resources:
+  App\Entity\User:
+    collectionOperations:
+      get: ~
+      register:
+        method: POST
+        path: /register
+        controller: App\Controller\Security\Register
+    itemOperations:
+      get: ~
+      login:
+        method: POST
+        route_name: api_login_check
+        swagger_context:
+          summary: Performs a login attempt, returning a valid token on success
+          parameters:
+          - name: user
+            in: body
+            required: true
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+          responses:
+            200:
+              description: "Successful login attempt, returning a new token"
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string

@@ -83,8 +83,20 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.3.3"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.4.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "kevinrob/guzzle-cache-middleware": {
+        "version": "v2.1.1"
     },
     "lexik/jwt-authentication-bundle": {
         "version": "2.3",
@@ -116,6 +128,9 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "php-tmdb/api": {
+        "version": "v2.1.15"
+    },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
     },
@@ -131,6 +146,9 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/link": {
         "version": "1.0.0"
     },
@@ -139,6 +157,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "rtheunissen/guzzle-log-middleware": {
+        "version": "v0.4.1"
     },
     "sensio/framework-extra-bundle": {
         "version": "4.0",

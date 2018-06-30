@@ -25,11 +25,6 @@ class Movie
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $slug;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $overview;
@@ -87,11 +82,6 @@ class Movie
         return $this;
     }
 
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
     public function getOverview(): ?string
     {
         return $this->overview;
@@ -131,7 +121,7 @@ class Movie
     /**
      * @return int
      */
-    public function getRuntime(): int
+    public function getRuntime(): ?int
     {
         return $this->runtime;
     }
@@ -140,7 +130,7 @@ class Movie
      * @param int $runtime
      * @return Movie
      */
-    public function setRuntime(int $runtime): self
+    public function setRuntime(?int $runtime): self
     {
         $this->runtime = $runtime;
 

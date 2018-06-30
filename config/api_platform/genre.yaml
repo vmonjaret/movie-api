@@ -1,0 +1,6 @@
+resources:
+  App\Entity\Genre:
+    collectionOperations:
+      get: ~
+    itemOperations:
+      get: ~

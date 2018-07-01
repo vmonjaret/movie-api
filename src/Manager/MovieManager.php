@@ -39,7 +39,8 @@ class MovieManager
             ->setOverview($import->getOverview())
             ->setReleasedAt($import->getReleaseDate())
             ->setRuntime($import->getRuntime())
-            ->setCover($import->getPosterPath());
+            ->setCover($import->getPosterPath())
+            ->setPopularity($import->getPopularity());
 
         foreach ($import->getGenres() as $genre) {
             $movie->addGenres($this->genreManager->getGenre($genre));
@@ -47,6 +48,19 @@ class MovieManager
 
         $this->entityManager->persist($movie);
         $this->entityManager->flush();
+
+        return $movie;
+    }
+
+    public function updateMovie(Movie $movie, TmdbMovie $import)
+    {
+        $movie->setId($import->getId())
+            ->setTitle($import->getTitle())
+            ->setOverview($import->getOverview())
+            ->setReleasedAt($import->getReleaseDate())
+            ->setRuntime($import->getRuntime())
+            ->setCover($import->getPosterPath())
+            ->setPopularity($import->getPopularity());
 
         return $movie;
     }

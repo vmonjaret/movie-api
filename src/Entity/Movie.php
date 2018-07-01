@@ -45,6 +45,11 @@ class Movie
     private $runtime;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $popularity;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movies")
      * @ApiSubresource(maxDepth=1)
      */
@@ -133,6 +138,25 @@ class Movie
     public function setRuntime(?int $runtime): self
     {
         $this->runtime = $runtime;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopularity(): int
+    {
+        return $this->popularity;
+    }
+
+    /**
+     * @param mixed $popularity
+     * @return Movie
+     */
+    public function setPopularity(int $popularity): self
+    {
+        $this->popularity = $popularity;
 
         return $this;
     }

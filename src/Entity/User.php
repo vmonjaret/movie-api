@@ -72,7 +72,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="boolean")
      */
-    private $active = false;
+    private $active = true;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)

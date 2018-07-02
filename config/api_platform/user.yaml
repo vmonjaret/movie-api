@@ -6,6 +6,33 @@ resources:
         method: POST
         path: /register
         controller: App\Controller\Security\Register
+        swagger_context:
+          summary: Register, returning a valid token on success
+          parameters:
+          - name: user
+            in: body
+            required: true
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - plainPassword
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                plainPassword:
+                  type: string
+          responses:
+            200:
+              description: "Successful register attempt, returning a new token"
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
     itemOperations:
       get: ~
       login:

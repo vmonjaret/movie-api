@@ -5,7 +5,7 @@ namespace App\Controller\Movie;
 use App\Repository\MovieRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class GetPopulars
+class GetRecents
 {
     private $movieRepository;
     private $request;
@@ -22,7 +22,7 @@ class GetPopulars
     public function __invoke(Request $request)
     {
         $page = $request->get('page') ?? 1;
-        $movies = $this->movieRepository->findPopulars($page);
+        $movies = $this->movieRepository->findRecents($page);
 
         return $movies;
     }

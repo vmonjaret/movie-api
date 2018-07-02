@@ -6,5 +6,9 @@ resources:
         method: get
         path: /movies/populars
         controller: App\Controller\Movie\GetPopulars
+      recents:
+        method: get
+        path: /movies/recents
+        controller: App\Controller\Movie\GetRecents
     itemOperations:
       get: ~

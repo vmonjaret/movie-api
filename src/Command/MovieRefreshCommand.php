@@ -49,7 +49,7 @@ class MovieRefreshCommand extends Command
             /**
              * @var \Tmdb\Model\Movie $api
              */
-            $api = $movieRepository->load($movie->getId());
+            $api = $movieRepository->load($movie->getId(), array('language' => 'fr'));
             $this->movieManager->updateMovie($movie, $api);
         }
 

@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Movie
 {
+    const MAX_ITEMS = 9;
+
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")

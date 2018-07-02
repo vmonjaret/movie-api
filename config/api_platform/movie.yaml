@@ -2,5 +2,9 @@ resources:
   App\Entity\Movie:
     collectionOperations:
       get: ~
+      populars:
+        method: get
+        path: /movies/populars
+        controller: App\Controller\Movie\GetPopulars
     itemOperations:
       get: ~

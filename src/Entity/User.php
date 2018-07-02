@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -13,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     attributes={
  *          "normalization_context"={"groups"={"user"}},
- *          "denormalization_context"={"groups"={"user_write"}}
+ *          "denormalization_context"={"groups"={"user, ""user_write"}}
  *     }
  * )
  * @ORM\Table(name="`user`")
@@ -27,6 +29,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user"})
      */
     private $id;
 
@@ -41,7 +44,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Groups({"user", "user_write"})
+     * @Groups({"user", "comment"})
      */
     private $username;
 
@@ -71,9 +74,15 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $active = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
+        $this->comments = new ArrayCollection();
     }
 
     public function getId()
@@ -205,5 +214,36 @@ class User implements AdvancedUserInterface, \Serializable
             $this->password,
             $this->active
             ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -46,4 +46,19 @@ class MovieRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+
+    public function getSimilars(Movie $movie, int $maxResult = 3)
+    {
+        $query = $this->createQueryBuilder('m')
+            ->leftJoin('m.mySuggestions', 'my_suggestions')
+            ->leftJoin('m.suggestions', 'suggestions')
+            ->where('suggestions.id = :movieId')
+            ->orWhere('my_suggestions.id = :movieId')
+            ->setMaxResults($maxResult)
+            ->setParameter('movieId', $movie->getId())
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
 }

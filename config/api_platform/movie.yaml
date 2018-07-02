@@ -12,3 +12,7 @@ resources:
         controller: App\Controller\Movie\GetRecents
     itemOperations:
       get: ~
+      similars:
+        method: get
+        path: /movies/{id}/similars
+        controller: App\Controller\Movie\GetSimilars

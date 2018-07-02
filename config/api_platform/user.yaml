@@ -13,7 +13,7 @@ resources:
             in: body
             required: true
             schema:
-              type: object
+              type: App\Entity\User
               required:
                 - username
                 - email

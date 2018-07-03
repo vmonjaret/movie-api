@@ -254,13 +254,13 @@ class User implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
-    public function addMoviesLiked(Movie $moviesLiked)
+    public function addMovieLiked(Movie $moviesLiked)
     {
         $this->moviesLiked[] = $moviesLiked;
         return $this;
     }
 
-    public function removeMoviesLiked(Movie $moviesLiked)
+    public function removeMovieLiked(Movie $moviesLiked)
     {
         $this->moviesLiked->removeElement($moviesLiked);
     }

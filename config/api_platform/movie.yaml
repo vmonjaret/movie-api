@@ -31,3 +31,14 @@ resources:
         method: get
         path: /movies/{id}/casting
         controller: App\Controller\Movie\GetCasting
+      like:
+        method: put
+        path: /movies/{id}/like
+        controller: App\Controller\Movie\Like
+        swagger_context:
+          summary: User like a movie
+          parameters:
+          - name: id
+            in: path
+            required: true
+            type: string

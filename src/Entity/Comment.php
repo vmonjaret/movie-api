@@ -46,8 +46,7 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @ApiSubresource()
-     * @MaxDepth(1)
+     * @ApiSubresource(maxDepth=1)
      * @Groups({"comment"})
      */
     private $user;

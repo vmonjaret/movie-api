@@ -7,55 +7,71 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+            "normalization_context"={"groups" = {"movie"}}
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
  */
 class Movie
 {
     const MAX_ITEMS = 9;
+    const MAX_SIMILAR = 3;
+    const MAX_CASTING = 10;
+
 
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
+     * @Groups("movie")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("movie")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("movie")
      */
     private $overview;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("movie")
      */
     private $cover;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("movie")
      */
     private $releasedAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups("movie")
      */
     private $runtime;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("movie")
      */
     private $popularity;
 
     /**
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movies")
      * @ApiSubresource(maxDepth=1)
+     * @Groups("movie")
      */
     private $genres;
 
@@ -76,6 +92,11 @@ class Movie
     private $mySuggestions;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Casting", mappedBy="movie", orphanRemoval=true)
+     */
+    private $castings;
+
+    /**
      * Movie constructor.
      */
     public function __construct()
@@ -85,6 +106,7 @@ class Movie
         $this->suggestions = new ArrayCollection();
         $this->suggestions = new ArrayCollection();
         $this->mySuggestions = new ArrayCollection();
+        $this->castings = new ArrayCollection();
     }
 
     public function getId(): int
@@ -293,6 +315,37 @@ class Movie
     {
         if ($this->mySuggestions->contains($mySuggestion)) {
             $this->mySuggestions->removeElement($mySuggestion);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Casting[]
+     */
+    public function getCastings(): Collection
+    {
+        return $this->castings;
+    }
+
+    public function addCasting(Casting $casting): self
+    {
+        if (!$this->castings->contains($casting)) {
+            $this->castings[] = $casting;
+            $casting->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCasting(Casting $casting): self
+    {
+        if ($this->castings->contains($casting)) {
+            $this->castings->removeElement($casting);
+            // set the owning side to null (unless already changed)
+            if ($casting->getMovie() === $this) {
+                $casting->setMovie(null);
+            }
         }
 
         return $this;

@@ -1,0 +1,6 @@
+resources:
+  App\Entity\Actor:
+    collectionOperations:
+      get: ~
+    itemOperations:
+      get: ~

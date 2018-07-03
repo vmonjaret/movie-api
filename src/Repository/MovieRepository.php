@@ -53,6 +53,6 @@ class MovieRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery();
 
-        return $query->getResult();
+        return $query->getOneOrNullResult();
     }
 }

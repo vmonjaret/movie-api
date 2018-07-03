@@ -42,3 +42,25 @@ resources:
             in: path
             required: true
             type: string
+      wish:
+        method: put
+        path: /movies/{id}/wish
+        controller: App\Controller\Movie\Wish
+        swagger_context:
+          summary: User wish a movie
+          parameters:
+          - name: id
+            in: path
+            required: true
+            type: string
+      watch:
+        method: put
+        path: /movies/{id}/watch
+        controller: App\Controller\Movie\Wish
+        swagger_context:
+          summary: User watched a movie
+          parameters:
+          - name: id
+            in: path
+            required: true
+            type: string

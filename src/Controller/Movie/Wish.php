@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: myriam
+ * Date: 03/07/18
+ * Time: 21:04
+ */
 
 namespace App\Controller\Movie;
 
@@ -9,14 +15,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Doctrine\ORM\EntityManagerInterface;
 
-class Like
+class Wish
 {
     private $movieRepository;
     private $tokenStorage;
     private $entityManager;
 
     /**
-     * Like constructor.
+     * Wish constructor.
      * @param MovieRepository $movieRepository
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $entityManager
@@ -39,10 +45,10 @@ class Like
 
         $movie = $this->movieRepository->find($movie->getId());
         if ($movie != null) {
-            if ($user->getMoviesLiked()->contains($movie)) {
-                $user->removeMovieLiked($movie);
+            if ($user->getMoviesWished()->contains($movie)) {
+                $user->removeMovieWished($movie);
             } else {
-                $user->addMovieLiked($movie);
+                $user->addMovieWished($movie);
             }
 
             $this->entityManager->flush();

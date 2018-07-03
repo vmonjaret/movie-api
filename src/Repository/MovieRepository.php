@@ -46,4 +46,13 @@ class MovieRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+
+    public function findRandom()
+    {
+        $query = $this->createQueryBuilder('m')
+            ->setMaxResults(1)
+            ->getQuery();
+
+        return $query->getResult();
+    }
 }

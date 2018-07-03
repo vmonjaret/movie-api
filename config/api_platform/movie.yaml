@@ -10,5 +10,9 @@ resources:
         method: get
         path: /movies/recents
         controller: App\Controller\Movie\GetRecents
+      random: 
+        method: get
+        path: /movies/random
+        controller: App\Controller\Movie\GetRandom
     itemOperations:
       get: ~

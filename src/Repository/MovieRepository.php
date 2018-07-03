@@ -24,7 +24,7 @@ class MovieRepository extends ServiceEntityRepository
         $firstResult = ($page - 1) * Movie::MAX_ITEMS;
 
         $query = $this->createQueryBuilder('m')
-            ->orderBy('m.releasedAt', 'DESC')
+            ->orderBy('m.popularity', 'DESC')
             ->setFirstResult($firstResult)
             ->setMaxResults(Movie::MAX_ITEMS)
             ->getQuery();
@@ -58,6 +58,16 @@ class MovieRepository extends ServiceEntityRepository
             ->setParameter('movieId', $movie->getId())
             ->getQuery()
         ;
+
+        return $query->getResult();
+    }
+
+    public function search(string $title)
+    {
+        $query = $this->createQueryBuilder('m')
+            ->where('m.title LIKE :title')
+            ->setParameter('title', '%'.$title.'%')
+            ->getQuery();
 
         return $query->getResult();
     }

@@ -56,7 +56,7 @@ resources:
       watch:
         method: put
         path: /movies/{id}/watch
-        controller: App\Controller\Movie\Wish
+        controller: App\Controller\Movie\Watch
         swagger_context:
           summary: User watched a movie
           parameters:

@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Movie as Movie;
 
 /**
  * @ApiResource(
@@ -79,6 +80,12 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("liked_movies")
+     */
+    private $moviesLiked;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -90,7 +97,7 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -245,5 +252,21 @@ class User implements AdvancedUserInterface, \Serializable
         }
 
         return $this;
+    }
+
+    public function addMoviesLiked(Movie $moviesLiked)
+    {
+        $this->moviesLiked[] = $moviesLiked;
+        return $this;
+    }
+
+    public function removeMoviesLiked(Movie $moviesLiked)
+    {
+        $this->moviesLiked->removeElement($moviesLiked);
+    }
+
+    public function getMoviesLiked()
+    {
+        return $this->moviesLiked;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Movie as Movie;
 
 /**
  * @ApiResource(
@@ -79,10 +80,30 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("liked_movies")
+     */
+    private $moviesLiked;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("watched_movies")
+     */
+    private $moviesWatched;
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("wished_movies")
+     */
+    private $moviesWished;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
         $this->comments = new ArrayCollection();
+        $this->moviesLiked = new ArrayCollection();
+        $this->moviesWatched = new ArrayCollection();
+        $this->moviesWished  = new ArrayCollection();
     }
 
     public function getId()
@@ -90,7 +111,7 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -245,5 +266,53 @@ class User implements AdvancedUserInterface, \Serializable
         }
 
         return $this;
+    }
+
+    public function addMovieLiked(Movie $moviesLiked)
+    {
+        $this->moviesLiked[] = $moviesLiked;
+        return $this;
+    }
+
+    public function removeMovieLiked(Movie $moviesLiked)
+    {
+        $this->moviesLiked->removeElement($moviesLiked);
+    }
+
+    public function getMoviesLiked()
+    {
+        return $this->moviesLiked;
+    }
+
+    public function addMovieWatched(Movie $moviesWatched)
+    {
+        $this->moviesWatched[] = $moviesWatched;
+        return $this;
+    }
+
+    public function removeMovieWatched(Movie $moviesWatched)
+    {
+        $this->moviesWatched->removeElement($moviesWatched);
+    }
+
+    public function getMoviesWatched()
+    {
+        return $this->moviesWatched;
+    }
+
+    public function addMovieWished(Movie $moviesWished)
+    {
+        $this->moviesWished[] = $moviesWished;
+        return $this;
+    }
+
+    public function removeMovieWished(Movie $moviesWished)
+    {
+        $this->moviesWished->removeElement($moviesWished);
+    }
+
+    public function getMoviesWished()
+    {
+        return $this->moviesWished;
     }
 }

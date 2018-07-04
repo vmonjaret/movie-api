@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NotationRepository")
  * @ApiResource(
  *     attributes={
- *          "normalization_context"={"groups"={"comment"}}
+ *          "normalization_context"={"groups"={"notation"}}
  *     }
  * )
  */
@@ -17,26 +19,35 @@ class Notation
 {
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notations")
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    private $user;
+    private $id;
+
     /**
-     * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="notations")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $movie;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notations", fetch="EAGER")
+     * @ORM\JoinColumn(nullable=false)
+     * @ApiSubresource(maxDepth=1)
+     * @Groups({"comment"})
+     */
+    private $user;
+
     /**
      * @var int
-     *
      * @ORM\Column(name="mark", type="integer")
+     * @Groups({"notation"})
      */
     private $mark;
 
-    public function __construct(User $user, Movie $movie, $mark = null)
+    public function getId()
     {
-        $this->movie = $movie;
-        $this->user = $user;
-        $this->mark = $mark;
+        return $this->id;
     }
 
     public function setMark($mark)

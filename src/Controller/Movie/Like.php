@@ -37,19 +37,14 @@ class Like
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $movie = $this->movieRepository->find($movie->getId());
-        if ($movie != null) {
-            if ($user->getMoviesLiked()->contains($movie)) {
-                $user->removeMovieLiked($movie);
-            } else {
-                $user->addMovieLiked($movie);
-            }
-
-            $this->entityManager->flush();
-
-            return new JsonResponse(null, 200);
+        if ($user->getMoviesLiked()->contains($movie)) {
+            $user->removeMovieLiked($movie);
+        } else {
+            $user->addMovieLiked($movie);
         }
 
-        return new JsonResponse('Error:Movie not found', 400);
+        $this->entityManager->flush();
+
+        return new JsonResponse(null, 200);
     }
 }

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: myriam
- * Date: 03/07/18
- * Time: 21:13
- */
 
 namespace App\Controller\Movie;
 
@@ -43,19 +37,14 @@ class Watch
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $movie = $this->movieRepository->find($movie->getId());
-        if ($movie != null) {
-            if ($user->getMoviesWatched()->contains($movie)) {
-                $user->removeMovieWatched($movie);
-            } else {
-                $user->addMovieWatched($movie);
-            }
-
-            $this->entityManager->flush();
-
-            return new JsonResponse(null, 200);
+        if ($user->getMoviesWatched()->contains($movie)) {
+            $user->removeMovieWatched($movie);
+        } else {
+            $user->addMovieWatched($movie);
         }
 
-        return new JsonResponse('Error:Movie not found', 400);
+        $this->entityManager->flush();
+
+        return new JsonResponse(null, 200);
     }
 }

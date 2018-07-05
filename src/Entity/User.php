@@ -31,7 +31,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user", "comment"})
+     * @Groups({"user", "comment", "notation"})
      */
     private $id;
 
@@ -46,7 +46,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Groups({"user", "comment", "user_write", "profile"})
+     * @Groups({"user", "comment", "user_write", "profile", "notation"})
      */
     private $username;
 
@@ -83,6 +83,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource()
      */
     private $notations;
 

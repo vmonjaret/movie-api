@@ -40,7 +40,7 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"comment", "comment_write"})
+     * @Groups({"comment", "comment_write", "light_movie"})
      */
     private $movie;
 

@@ -24,7 +24,7 @@ class MovieRepository extends ServiceEntityRepository
         $firstResult = ($page - 1) * Movie::MAX_ITEMS;
 
         $query = $this->createQueryBuilder('m')
-            ->orderBy('m.releasedAt', 'DESC')
+            ->orderBy('m.popularity', 'DESC')
             ->setFirstResult($firstResult)
             ->setMaxResults(Movie::MAX_ITEMS)
             ->getQuery();

@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ApiResource(
@@ -75,14 +76,27 @@ class User implements AdvancedUserInterface, \Serializable
     private $active = true;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
      */
     private $comments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Genre", cascade={"persist"})
+     * @Groups("user")
+     */
+    private $favoritesGenres;
 
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
         $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->favoritesGenres = new ArrayCollection();
     }
 
     public function getId()
@@ -242,6 +256,56 @@ class User implements AdvancedUserInterface, \Serializable
             if ($comment->getUser() === $this) {
                 $comment->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Genre[]
+     */
+    public function getFavoritesGenres(): Collection
+    {
+        return $this->favoritesGenres;
+    }
+
+    public function addFavoritesGenre(Genre $favoritesGenre): self
+    {
+        if (!$this->favoritesGenres->contains($favoritesGenre)) {
+            $this->favoritesGenres[] = $favoritesGenre;
+        }
+
+        return $this;
+    }
+
+    public function removeFavoritesGenre(Genre $favoritesGenre): self
+    {
+        if ($this->favoritesGenres->contains($favoritesGenre)) {
+            $this->favoritesGenres->removeElement($favoritesGenre);
         }
 
         return $this;

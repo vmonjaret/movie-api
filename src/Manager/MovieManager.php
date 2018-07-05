@@ -47,8 +47,6 @@ class MovieManager
 
     public function createMovieFromModel(TmdbMovie $import, bool $isRecommandation = false): Movie
     {
-        dump('added movie');
-
         $movie = new Movie();
         $movie->setId($import->getId())
             ->setTitle($import->getTitle())

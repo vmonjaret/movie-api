@@ -17,12 +17,13 @@ class Genre
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
+     * @Groups("user")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("movie")
+     * @Groups({"movie", "user"})
      */
     private $name;
 

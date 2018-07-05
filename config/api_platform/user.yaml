@@ -2,6 +2,12 @@ resources:
   App\Entity\User:
     collectionOperations:
       get: ~
+      get_me:
+        method: GET
+        path: /users/me
+        controller: App\Controller\User\GetMe
+        defaults:
+          groups: profile
       register:
         method: POST
         path: /register

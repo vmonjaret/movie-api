@@ -16,7 +16,7 @@ use App\Entity\Movie as Movie;
 /**
  * @ApiResource(
  *     attributes={
- *          "normalization_context"={"groups"={"user"}},
+ *          "normalization_context"={"groups"={"user", "profile"}},
  *          "denormalization_context"={"groups"={"user_write"}}
  *     }
  * )
@@ -46,7 +46,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Groups({"user", "comment", "user_write"})
+     * @Groups({"user", "comment", "user_write", "profile"})
      */
     private $username;
 
@@ -101,14 +101,17 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
      * @ORM\JoinTable("liked_movies")
+     * @Groups({"profile", "movie_light"})
      */
     private $moviesLiked;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinTable("watched_movies")
+     * @Groups({"profile", "movie_light"})
      */
     private $moviesWatched;
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
      * @ORM\JoinTable("wished_movies")

@@ -102,14 +102,12 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
      * @ORM\JoinTable("liked_movies")
-     * @Groups({"profile", "movie_light"})
      */
     private $moviesLiked;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinTable("watched_movies")
-     * @Groups({"profile", "movie_light"})
      */
     private $moviesWatched;
 

@@ -23,5 +23,4 @@ class GetMe
         return $user;
     }
 
-
 }

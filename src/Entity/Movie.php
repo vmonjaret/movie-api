@@ -76,6 +76,12 @@ class Movie
     private $genres;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="movie", orphanRemoval=true)
+     * @ApiSubresource()
+     */
+    private $notations;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="movie", orphanRemoval=true)
      * @ApiSubresource()
      */
@@ -230,6 +236,37 @@ class Movie
     {
         if ($this->genres->contains($genre)) {
             $this->genres->removeElement($genre);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notation[]
+     */
+    public function getNotations(): Collection
+    {
+        return $this->notations;
+    }
+
+    public function addNotation(Notation $notation): self
+    {
+        if (!$this->notations->contains($notation)) {
+            $this->notations[] = $notation;
+            $notation->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotation(Notation $notation): self
+    {
+        if ($this->notations->contains($notation)) {
+            $this->notations->removeElement($notation);
+            // set the owning side to null (unless already changed)
+            if ($notation->getMovie() === $this) {
+                $notation->setMovie(null);
+            }
         }
 
         return $this;

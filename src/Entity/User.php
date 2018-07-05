@@ -76,6 +76,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $active = true;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="user", orphanRemoval=true)
+     */
+    private $notations;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
      */
     private $comments;
@@ -314,5 +319,33 @@ class User implements AdvancedUserInterface, \Serializable
     public function getMoviesWished()
     {
         return $this->moviesWished;
+    }
+
+    public function getNotations(): Collection
+    {
+        return $this->notations;
+    }
+
+    public function addNotation(Notation $notation): self
+    {
+        if (!$this->notations->contains($notation)) {
+            $this->notations[] = $notation;
+            $notation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotation(Notation $notation): self
+    {
+        if ($this->notations->contains($notation)) {
+            $this->notations->removeElement($notation);
+            // set the owning side to null (unless already changed)
+            if ($notation->getUser() === $this) {
+                $notation->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

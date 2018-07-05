@@ -28,13 +28,13 @@ class Movie
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
-     * @Groups({"movie", "comment", "light_movie"})
+     * @Groups({"movie", "comment", "notation", "light_movie"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"movie", "comment", "light_movie"})
+     * @Groups({"movie", "comment", "notation", "light_movie"})
      */
     private $title;
 
@@ -46,7 +46,7 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"movie", "comment", "light_movie"})
+     * @Groups({"movie", "comment", "notation", "light_movie"})
      */
     private $cover;
 

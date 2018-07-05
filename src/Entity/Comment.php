@@ -6,13 +6,13 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  * @ApiResource(
  *     attributes={
- *          "normalization_context"={"groups"={"comment"}}
+ *          "normalization_context"={"groups"={"comment"}},
+ *          "denormalization_context"={"groups"={"comment_write"}}
  *     }
  * )
  */
@@ -27,7 +27,7 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"comment"})
+     * @Groups({"comment", "comment_write"})
      */
     private $content;
 
@@ -40,6 +40,7 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"comment", "comment_write"})
      */
     private $movie;
 

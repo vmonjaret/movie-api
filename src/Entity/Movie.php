@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 /**
  * @ApiResource(
  *     attributes={
-            "normalization_context"={"groups" = {"movie"}}
+            "normalization_context"={"groups" = {"movie", "light_movie"}}
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
@@ -28,13 +28,13 @@ class Movie
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
-     * @Groups({"movie", "comment"})
+     * @Groups({"movie", "comment", "light_movie"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"movie", "comment"})
+     * @Groups({"movie", "comment", "light_movie"})
      */
     private $title;
 
@@ -46,7 +46,7 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"movie", "comment"})
+     * @Groups({"movie", "comment", "light_movie"})
      */
     private $cover;
 

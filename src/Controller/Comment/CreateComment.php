@@ -5,6 +5,7 @@ namespace App\Controller\Comment;
 use App\Entity\Comment;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class CreateComment {
@@ -27,6 +28,7 @@ class CreateComment {
     }
 
     /**
+     * @IsGranted("ROLE_USER")
      * @param Comment $data
      * @return Comment
      */

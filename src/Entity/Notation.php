@@ -11,7 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\NotationRepository")
  * @ApiResource(
  *     attributes={
- *          "normalization_context"={"groups"={"notation"}}
+ *          "normalization_context"={"groups"={"notation"}},
+ *          "denormalization_context"={"groups"={"notation_write"}}
  *     }
  * )
  */
@@ -27,6 +28,7 @@ class Notation
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="notations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"notation", "notation_write"})
      */
     private $movie;
 
@@ -34,14 +36,14 @@ class Notation
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notations", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * @ApiSubresource(maxDepth=1)
-     * @Groups({"comment"})
+     * @Groups({"notation"})
      */
     private $user;
 
     /**
      * @var int
      * @ORM\Column(name="mark", type="integer")
-     * @Groups({"notation"})
+     * @Groups({"notation", "notation_write"})
      */
     private $mark;
 

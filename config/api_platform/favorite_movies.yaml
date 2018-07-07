@@ -1,0 +1,14 @@
+resources:
+  App\Entity\FavoritesMovies:
+    collectionOperations:
+      get_favorites:
+        method: get
+        path: /movies/favorites
+        controller: App\Controller\Movie\GetFavorites
+
+      add_favorites:
+        method: post
+        path: /movies/favorites
+        controller: App\Controller\Movie\AddFavorite
+    itemOperations:
+      get: ~

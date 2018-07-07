@@ -26,3 +26,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    'App\DataProvider\Movie\GetPopularCollectionDataProvider':
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection
+        # Autoconfiguration must be disabled to set a custom priority
+        autoconfigure: false

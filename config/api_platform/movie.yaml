@@ -24,6 +24,10 @@ resources:
             in: query
             required: true
             type: string
+       random:
+        method: get
+        path: /movies/random
+        controller: App\Controller\Movie\GetRandom
     itemOperations:
       get: ~
       similars:
@@ -67,7 +71,3 @@ resources:
             in: path
             required: true
             type: string
-      random:
-        method: get
-        path: /movies/random
-        controller: App\Controller\Movie\GetRandom

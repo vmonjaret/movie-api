@@ -7,10 +7,11 @@ resources:
         path: /movies/populars
         normalization_context:
           groups: ['light_movie']
-      recents:
+      get_recents:
         method: get
         path: /movies/recents
-        controller: App\Controller\Movie\GetRecents
+        normalization_context:
+          groups: ['light_movie']
       search:
         method: get
         path: /movies/search

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Movie as Movie;
 
 /**
  * @ApiResource(
@@ -29,7 +31,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user"})
+     * @Groups({"user", "comment", "notation"})
      */
     private $id;
 
@@ -44,7 +46,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Groups({"user", "comment", "user_write"})
+     * @Groups({"user", "comment", "user_write", "notation"})
      */
     private $username;
 
@@ -75,14 +77,54 @@ class User implements AdvancedUserInterface, \Serializable
     private $active = true;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource()
+     */
+    private $notations;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource()
      */
     private $comments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Genre", cascade={"persist"})
+     * @Groups("user")
+     */
+    private $favoritesGenres;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("liked_movies")
+     */
+    private $moviesLiked;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("watched_movies")
+     */
+    private $moviesWatched;
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\JoinTable("wished_movies")
+     */
+    private $moviesWished;
 
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
         $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->favoritesGenres = new ArrayCollection();
+        $this->moviesLiked = new ArrayCollection();
+        $this->moviesWatched = new ArrayCollection();
+        $this->moviesWished  = new ArrayCollection();
     }
 
     public function getId()
@@ -90,7 +132,7 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -241,6 +283,139 @@ class User implements AdvancedUserInterface, \Serializable
             // set the owning side to null (unless already changed)
             if ($comment->getUser() === $this) {
                 $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Genre[]
+     */
+    public function getFavoritesGenres(): Collection
+    {
+        return $this->favoritesGenres;
+    }
+
+    public function addFavoritesGenre(Genre $favoritesGenre): self
+    {
+        if (!$this->favoritesGenres->contains($favoritesGenre)) {
+            $this->favoritesGenres[] = $favoritesGenre;
+        }
+
+        return $this;
+    }
+
+    public function addMovieLiked(Movie $moviesLiked)
+    {
+        if (!$this->moviesLiked->contains($moviesLiked)) {
+            $this->moviesLiked[] = $moviesLiked;
+        }
+
+        return $this;
+    }
+
+    public function removeMovieLiked(Movie $moviesLiked)
+    {
+        if ($this->moviesLiked->contains($moviesLiked)) {
+            $this->moviesLiked->removeElement($moviesLiked);
+        }
+
+        return $this;
+    }
+
+    public function getMoviesLiked()
+    {
+        return $this->moviesLiked;
+    }
+
+    public function addMovieWatched(Movie $moviesWatched)
+    {
+        if (!$this->moviesWatched->contains($moviesWatched)) {
+            $this->moviesWatched[] = $moviesWatched;
+        }
+        return $this;
+    }
+
+    public function removeMovieWatched(Movie $moviesWatched)
+    {
+        if ($this->moviesWatched->contains($moviesWatched)) {
+            $this->moviesWatched->removeElement($moviesWatched);
+        }
+
+        return $this;
+    }
+
+    public function getMoviesWatched()
+    {
+        return $this->moviesWatched;
+    }
+
+    public function addMovieWished(Movie $moviesWished)
+    {
+        if (!$this->moviesWished->contains($moviesWished)) {
+            $this->moviesWished[] = $moviesWished;
+        }
+
+        return $this;
+    }
+
+    public function removeMovieWished(Movie $moviesWished)
+    {
+        if ($this->moviesWished->contains($moviesWished)) {
+            $this->moviesWished->removeElement($moviesWished);
+        }
+
+        return $this;
+    }
+
+    public function getMoviesWished()
+    {
+        return $this->moviesWished;
+    }
+
+    public function getNotations(): Collection
+    {
+        return $this->notations;
+    }
+
+    public function addNotation(Notation $notation): self
+    {
+        if (!$this->notations->contains($notation)) {
+            $this->notations[] = $notation;
+            $notation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoritesGenre(Genre $favoritesGenre): self
+    {
+        if ($this->favoritesGenres->contains($favoritesGenre)) {
+            $this->favoritesGenres->removeElement($favoritesGenre);
+        }
+
+        return $this;
+    }
+    public function removeNotation(Notation $notation): self
+    {
+        if ($this->notations->contains($notation)) {
+            $this->notations->removeElement($notation);
+            // set the owning side to null (unless already changed)
+            if ($notation->getUser() === $this) {
+                $notation->setUser(null);
             }
         }
 

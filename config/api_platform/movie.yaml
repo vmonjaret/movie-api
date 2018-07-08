@@ -2,17 +2,72 @@ resources:
   App\Entity\Movie:
     collectionOperations:
       get: ~
-      populars:
+      get_populars:
         method: get
         path: /movies/populars
-        controller: App\Controller\Movie\GetPopulars
-      recents:
+        normalization_context:
+          groups: ['light_movie']
+      get_recents:
         method: get
         path: /movies/recents
         controller: App\Controller\Movie\GetRecents
-      random: 
+        normalization_context:
+          groups: ['light_movie']
+      search:
+        method: get
+        path: /movies/search
+        controller: App\Controller\Movie\GetSearch
+        swagger_context:
+          summary: Return the list of wanted movies
+          parameters:
+          - name: title
+            in: query
+            required: true
+            type: string
+    itemOperations:
+      get: ~
+      similars:
+        method: get
+        path: /movies/{id}/similars
+        controller: App\Controller\Movie\GetSimilars
+      casting:
+        method: get
+        path: /movies/{id}/casting
+        controller: App\Controller\Movie\GetCasting
+      like:
+        method: put
+        path: /movies/{id}/like
+        controller: App\Controller\Movie\Like
+        swagger_context:
+          summary: User like a movie
+          parameters:
+          - name: id
+            in: path
+            required: true
+            type: string
+      wish:
+        method: put
+        path: /movies/{id}/wish
+        controller: App\Controller\Movie\Wish
+        swagger_context:
+          summary: User wish a movie
+          parameters:
+          - name: id
+            in: path
+            required: true
+            type: string
+      watch:
+        method: put
+        path: /movies/{id}/watch
+        controller: App\Controller\Movie\Watch
+        swagger_context:
+          summary: User watched a movie
+          parameters:
+          - name: id
+            in: path
+            required: true
+            type: string
+      random:
         method: get
         path: /movies/random
         controller: App\Controller\Movie\GetRandom
-    itemOperations:
-      get: ~

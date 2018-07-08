@@ -1,0 +1,10 @@
+resources:
+  App\Entity\MoviesSeen:
+    collectionOperations:
+      get_movies_seen:
+        method: get
+        path: /users/movies/seen
+        controller: App\Controller\Movie\GetSeen
+
+    itemOperations:
+      get: ~

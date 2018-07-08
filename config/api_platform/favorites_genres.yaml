@@ -1,0 +1,14 @@
+resources:
+  App\Entity\FavoritesGenres:
+    collectionOperations:
+      get_favorites:
+        method: get
+        path: /genres/favorites
+        controller: App\Controller\Genre\GetFavorites
+
+      add_favorites:
+        method: post
+        path: /genres/favorites
+        controller: App\Controller\Genre\AddFavorite
+    itemOperations:
+      get: ~

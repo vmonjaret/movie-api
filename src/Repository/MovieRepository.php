@@ -19,34 +19,6 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
-    public function findPopulars(int $page = 1)
-    {
-        $firstResult = ($page - 1) * Movie::MAX_ITEMS;
-
-        $query = $this->createQueryBuilder('m')
-            ->orderBy('m.popularity', 'DESC')
-            ->setFirstResult($firstResult)
-            ->setMaxResults(Movie::MAX_ITEMS)
-            ->getQuery();
-
-        return $query->getResult();
-    }
-
-    public function findRecents(int $page = 1)
-    {
-        $firstResult = ($page - 1) * Movie::MAX_ITEMS;
-
-        $query = $this->createQueryBuilder('m')
-            ->where('m.releasedAt <= :now')
-            ->orderBy('m.releasedAt', 'DESC')
-            ->setFirstResult($firstResult)
-            ->setMaxResults(Movie::MAX_ITEMS)
-            ->setParameters(array('now' => new \DateTime()))
-            ->getQuery();
-
-        return $query->getResult();
-    }
-
     public function getSimilars(Movie $movie, int $maxResult = 3)
     {
         $query = $this->createQueryBuilder('m')

@@ -39,6 +39,10 @@ resources:
                 properties:
                   token:
                     type: string
+      get_favorite_stats:
+          method: get
+          path: /users/me/stats/favorites
+          controller: App\Controller\User\StatsMoviesByGenre
     itemOperations:
       get: ~
       login:

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -19,32 +20,20 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function getStatsMovieByGenre(User $user)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $rawSql = "
+SELECT count(*) as nb_movies, genre.name as name
+FROM watched_movies
+LEFT JOIN movie_genre ON movie_genre.movie_id = watched_movies.movie_id
+LEFT JOIN genre ON genre.id = movie_genre.genre_id
+WHERE watched_movies.user_id = :id
+GROUP BY movie_genre.genre_id
+ORDER BY nb_movies DESC";
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $stmt = $this->getEntityManager()->getConnection()->prepare($rawSql);
+        $stmt->execute(['id' => $user->getId()]);
+
+        return $stmt->fetchAll();
     }
-    */
 }

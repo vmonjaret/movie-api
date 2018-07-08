@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NotationRepository")
@@ -28,7 +29,7 @@ class Notation
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="notations")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"notation", "notation_write"})
+     * @Groups({"notation", "notation_write", "profile"})
      */
     private $movie;
 
@@ -42,10 +43,27 @@ class Notation
 
     /**
      * @var int
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 5,
+     *      minMessage = "The mark cannot be equal or inferior to {{ limit }}",
+     *      maxMessage = "he mark cannot be superior to {{ limit }}"
+     * )
      * @ORM\Column(name="mark", type="integer")
-     * @Groups({"notation", "notation_write"})
+     * @Groups({"notation", "notation_write", "profile"})
      */
     private $mark;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"notation", "profile"})
+     */
+    private $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId()
     {
@@ -61,6 +79,17 @@ class Notation
     public function getMark()
     {
         return $this->mark;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     public function setUser(User $user)

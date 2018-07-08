@@ -6,6 +6,8 @@ resources:
         method: GET
         path: /users/me
         controller: App\Controller\User\GetMe
+        attributes:
+            normalization_context: ['profile']
       register:
         method: POST
         path: /register

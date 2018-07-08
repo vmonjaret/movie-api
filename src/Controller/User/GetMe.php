@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class GetMe
@@ -16,6 +17,9 @@ class GetMe
         $this->tokenStorage = $tokenStorage;
     }
 
+    /**
+     * @IsGranted("ROLE_USER")
+     */
     public function __invoke()
     {
         $user = $this->tokenStorage->getToken()->getUser();

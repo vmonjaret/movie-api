@@ -2,10 +2,11 @@ resources:
   App\Entity\Movie:
     collectionOperations:
       get: ~
-      populars:
+      get_populars:
         method: get
         path: /movies/populars
-        controller: App\Controller\Movie\GetPopulars
+        normalization_context:
+          groups: ['light_movie']
       recents:
         method: get
         path: /movies/recents

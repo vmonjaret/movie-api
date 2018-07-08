@@ -21,7 +21,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Movie
 {
-    const MAX_ITEMS = 9;
     const MAX_SIMILAR = 3;
     const MAX_CASTING = 10;
 
@@ -29,13 +28,13 @@ class Movie
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
-     * @Groups({"movie", "comment", "notation", "light_movie"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"movie", "comment", "notation", "light_movie"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
      */
     private $title;
 
@@ -47,13 +46,13 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"movie", "comment", "notation", "light_movie"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
      */
     private $cover;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("movie")
+     * @Groups({"movie", "light_movie"})
      */
     private $releasedAt;
 
@@ -78,13 +77,13 @@ class Movie
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
      */
     private $notations;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
      */
     private $comments;
 

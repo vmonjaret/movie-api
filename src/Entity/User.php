@@ -16,7 +16,7 @@ use App\Entity\Movie as Movie;
 /**
  * @ApiResource(
  *     attributes={
- *          "normalization_context"={"groups"={"user"}},
+ *          "normalization_context"={"groups"={"user", "profile"}},
  *          "denormalization_context"={"groups"={"user_write"}}
  *     }
  * )
@@ -46,7 +46,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Groups({"user", "comment", "user_write", "notation"})
+     * @Groups({"user", "comment", "user_write", "profile", "notation"})
      */
     private $username;
 
@@ -78,41 +78,48 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"profile"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="user", orphanRemoval=true)
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
+     * @Groups("profile")
      */
     private $notations;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
+     * @Groups("profile")
      */
     private $comments;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Genre", cascade={"persist"})
-     * @Groups("user")
+     * @Groups({"user", "profile"})
      */
     private $favoritesGenres;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
      * @ORM\JoinTable("liked_movies")
+     * @Groups({"profile"})
      */
     private $moviesLiked;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinTable("watched_movies")
+     * @Groups({"profile"})
      */
     private $moviesWatched;
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", cascade={"persist"})
      * @ORM\JoinTable("wished_movies")
+     * @Groups({"profile"})
      */
     private $moviesWished;
 

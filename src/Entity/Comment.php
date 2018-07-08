@@ -27,20 +27,20 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"comment", "comment_write"})
+     * @Groups({"comment", "comment_write", "profile"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"comment"})
+     * @Groups({"comment", "profile"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"comment", "comment_write", "light_movie"})
+     * @Groups({"comment", "comment_write", "profile"})
      */
     private $movie;
 

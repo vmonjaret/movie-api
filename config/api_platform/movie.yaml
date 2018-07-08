@@ -16,17 +16,6 @@ resources:
         method: get
         path: /movies/random
         controller: App\Controller\Movie\GetRandom
-      search:
-        method: get
-        path: /movies/search
-        controller: App\Controller\Movie\GetSearch
-        swagger_context:
-          summary: Return the list of wanted movies
-          parameters:
-          - name: title
-            in: query
-            required: true
-            type: string
     itemOperations:
       get: ~
       similars:

@@ -2,67 +2,105 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+            "normalization_context"={"groups" = {"movie", "light_movie"}}
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
  */
 class Movie
 {
-    const MAX_ITEMS = 9;
+    const MAX_SIMILAR = 3;
+    const MAX_CASTING = 10;
+
 
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
      */
     private $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups("movie")
      */
     private $overview;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
      */
     private $cover;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"movie", "light_movie"})
      */
     private $releasedAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups("movie")
      */
     private $runtime;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("movie")
      */
     private $popularity;
 
     /**
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movies")
      * @ApiSubresource(maxDepth=1)
+     * @Groups("movie")
      */
     private $genres;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="movie", orphanRemoval=true)
+     * @ApiSubresource(maxDepth=1)
+     */
+    private $notations;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource()
+     * @ApiSubresource(maxDepth=1)
      */
     private $comments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="mySuggestions", cascade={"persist"})
+     */
+    private $suggestions;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", inversedBy="suggestions", cascade={"persist"})
+     */
+    private $mySuggestions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Casting", mappedBy="movie", orphanRemoval=true)
+     */
+    private $castings;
 
     /**
      * Movie constructor.
@@ -71,6 +109,10 @@ class Movie
     {
         $this->genres = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->suggestions = new ArrayCollection();
+        $this->suggestions = new ArrayCollection();
+        $this->mySuggestions = new ArrayCollection();
+        $this->castings = new ArrayCollection();
     }
 
     public function getId(): int
@@ -102,7 +144,7 @@ class Movie
         return $this->overview;
     }
 
-    public function setOverview(string $overview): self
+    public function setOverview(?string $overview): self
     {
         $this->overview = $overview;
 
@@ -114,9 +156,11 @@ class Movie
         return $this->cover;
     }
 
-    public function setCover(string $cover): self
+    public function setCover(?string $cover): self
     {
-        $this->cover = "https://image.tmdb.org/t/p/w500" . $cover;
+        if ($cover !== null) {
+            $this->cover = "https://image.tmdb.org/t/p/w500" . $cover;
+        }
 
         return $this;
     }
@@ -179,24 +223,51 @@ class Movie
         return $this->genres;
     }
 
-    /**
-     * @param Genre $genres
-     * @return Movie
-     */
-    public function addGenres(Genre $genre): self
+    public function addGenre(Genre $genre): self
     {
-        $this->genres[] = $genre;
+        if (!$this->genres->contains($genre)) {
+            $this->genres[] = $genre;
+        }
+
+        return $this;
+    }
+
+    public function removeGenre(Genre $genre): self
+    {
+        if ($this->genres->contains($genre)) {
+            $this->genres->removeElement($genre);
+        }
 
         return $this;
     }
 
     /**
-     * @param Genre $genres
-     * @return Movie
+     * @return Collection|Notation[]
      */
-    public function removeGenres(Genre $genre): self
+    public function getNotations(): Collection
     {
-        $this->genres->removeElement($genre);
+        return $this->notations;
+    }
+
+    public function addNotation(Notation $notation): self
+    {
+        if (!$this->notations->contains($notation)) {
+            $this->notations[] = $notation;
+            $notation->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotation(Notation $notation): self
+    {
+        if ($this->notations->contains($notation)) {
+            $this->notations->removeElement($notation);
+            // set the owning side to null (unless already changed)
+            if ($notation->getMovie() === $this) {
+                $notation->setMovie(null);
+            }
+        }
 
         return $this;
     }
@@ -226,6 +297,91 @@ class Movie
             // set the owning side to null (unless already changed)
             if ($comment->getMovie() === $this) {
                 $comment->setMovie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Movie[]
+     */
+    public function getSuggestions(): Collection
+    {
+        return $this->suggestions;
+    }
+
+    public function addSuggestion(Movie $suggestion): self
+    {
+        if (!$this->suggestions->contains($suggestion)) {
+            $this->suggestions[] = $suggestion;
+            $suggestion->addMySuggestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuggestion(Movie $suggestion): self
+    {
+        if ($this->suggestions->contains($suggestion)) {
+            $this->suggestions->removeElement($suggestion);
+            $suggestion->removeMySuggestion($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Movie[]
+     */
+    public function getMySuggestions(): Collection
+    {
+        return $this->mySuggestions;
+    }
+
+    public function addMySuggestion(Movie $mySuggestion): self
+    {
+        if (!$this->mySuggestions->contains($mySuggestion)) {
+            $this->mySuggestions[] = $mySuggestion;
+        }
+
+        return $this;
+    }
+
+    public function removeMySuggestion(Movie $mySuggestion): self
+    {
+        if ($this->mySuggestions->contains($mySuggestion)) {
+            $this->mySuggestions->removeElement($mySuggestion);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Casting[]
+     */
+    public function getCastings(): Collection
+    {
+        return $this->castings;
+    }
+
+    public function addCasting(Casting $casting): self
+    {
+        if (!$this->castings->contains($casting)) {
+            $this->castings[] = $casting;
+            $casting->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCasting(Casting $casting): self
+    {
+        if ($this->castings->contains($casting)) {
+            $this->castings->removeElement($casting);
+            // set the owning side to null (unless already changed)
+            if ($casting->getMovie() === $this) {
+                $casting->setMovie(null);
             }
         }
 

@@ -1,0 +1,10 @@
+resources:
+  App\Entity\Notation:
+    collectionOperations:
+      get: ~
+      post:
+        method: post
+        path: /notations
+        controller: App\Controller\Notation\AddNotation
+        swagger_context:
+          summary: Create a Notation resource (custom post).

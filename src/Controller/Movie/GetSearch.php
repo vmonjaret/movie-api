@@ -5,13 +5,13 @@ namespace App\Controller\Movie;
 use App\Repository\MovieRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class GetPopulars
+class GetSearch
 {
     private $movieRepository;
     private $request;
 
     /**
-     * GetPopulars constructor.
+     * GetSearch constructor.
      * @param $movieRepository
      */
     public function __construct(MovieRepository $movieRepository)
@@ -21,8 +21,8 @@ class GetPopulars
 
     public function __invoke(Request $request)
     {
-        $page = $request->get('page') ?? 1;
-        $movies = $this->movieRepository->findPopulars($page);
+        $title = $request->get('title');
+        $movies = $this->movieRepository->search($title);
 
         return $movies;
     }

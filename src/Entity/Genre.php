@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource
@@ -16,11 +17,13 @@ class Genre
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
+     * @Groups("user")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"movie", "user"})
      */
     private $name;
 

@@ -36,4 +36,19 @@ ORDER BY nb_movies DESC";
 
         return $stmt->fetchAll();
     }
+
+    public function getMarkRepatition(User $user)
+    {
+        $rawSql = "
+SELECT count(*) as nb_notations, mark
+FROM notation
+WHERE user_id = :id
+GROUP BY mark
+ORDER BY mark;";
+
+        $stmt = $this->getEntityManager()->getConnection()->prepare($rawSql);
+        $stmt->execute(['id' => $user->getId()]);
+
+        return $stmt->fetchAll();
+    }
 }

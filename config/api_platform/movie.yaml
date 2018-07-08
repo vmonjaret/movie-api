@@ -12,6 +12,10 @@ resources:
         path: /movies/recents
         normalization_context:
           groups: ['light_movie']
+      random: 
+        method: get
+        path: /movies/random
+        controller: App\Controller\Movie\GetRandom
       search:
         method: get
         path: /movies/search

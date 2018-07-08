@@ -77,13 +77,12 @@ class Movie
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
      */
     private $notations;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
+     * @ApiSubresource()
      */
     private $comments;
 

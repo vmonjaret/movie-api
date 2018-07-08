@@ -28,9 +28,13 @@ class GetRandom extends Controller
     public function __invoke()
     {
         $em = $this->getDoctrine()->getManager();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        if(!is_string($this->tokenStorage->getToken()->getUser())) $movie = $this->movieRepository->findCustomRandom($this->tokenStorage->getToken()->getUser()->getId(), $em);
-        else $movie = $this->movieRepository->findRandom($em);
+        if(!is_string($user)) {
+            $movie = $this->movieRepository->findCustomRandom($user->getId(), $em);
+        } else {
+            $movie = $this->movieRepository->findRandom($em);
+        }
 
         return $movie[0];
     }

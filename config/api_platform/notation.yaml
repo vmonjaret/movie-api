@@ -7,4 +7,4 @@ resources:
         path: /notations
         controller: App\Controller\Notation\AddNotation
         swagger_context:
-                  summary: Create a Notation resource (custom post).
+          summary: Create a Notation resource (custom post).

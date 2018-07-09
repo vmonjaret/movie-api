@@ -33,3 +33,6 @@ services:
             $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection
         # Autoconfiguration must be disabled to set a custom priority
         autoconfigure: false
+    'App\DataProvider\Movie\MovieItemDataProvider':
+        arguments:
+            $itemExtensions: !tagged api_platform.doctrine.orm.query_extension.item

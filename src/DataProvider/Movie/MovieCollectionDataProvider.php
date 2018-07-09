@@ -8,9 +8,7 @@ use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use ApiPlatform\Core\Exception\RuntimeException;
 use App\Entity\User;
-use App\Repository\MovieRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -65,7 +63,7 @@ class MovieCollectionDataProvider implements CollectionDataProviderInterface
             }
         }
 
-        if ($movies !== null) {
+        if (null !== $movies) {
             $this->hydrateWithUser($movies);
             return $movies;
         }

@@ -104,6 +104,21 @@ class Movie
     private $castings;
 
     /**
+     * @Groups({"movie", "light_movie"})
+     */
+    public $liked = false;
+
+    /**
+     * @Groups({"movie", "light_movie"})
+     */
+    public $watched = false;
+
+    /**
+     * @Groups({"movie", "light_movie"})
+     */
+    public $wished = false;
+
+    /**
      * Movie constructor.
      */
     public function __construct()

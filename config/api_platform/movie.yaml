@@ -16,6 +16,12 @@ resources:
         method: get
         path: /movies/random
         controller: App\Controller\Movie\GetRandom
+      get_user_movies:
+        method: GET
+        path: /users/movies
+        controller: App\Controller\Movie\GetUserMovies
+        normalization_context:
+          groups: ['light_movie']
     itemOperations:
       get: ~
       similars:

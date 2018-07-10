@@ -2,13 +2,13 @@
 
 namespace App\DataProvider\Movie;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use ApiPlatform\Core\Exception\RuntimeException;
 use App\Entity\User;
+use App\Utils\MovieHydratation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -17,13 +17,13 @@ class MovieCollectionDataProvider implements CollectionDataProviderInterface
 {
     private $managerRegistry;
     private $collectionExtensions;
-    private $tokenStorage;
+    private $movieHydration;
 
-    public function __construct(ManagerRegistry $managerRegistry, iterable $collectionExtensions, TokenStorageInterface $tokenStorage)
+    public function __construct(ManagerRegistry $managerRegistry, iterable $collectionExtensions, MovieHydratation $movieHydratation)
     {
         $this->managerRegistry = $managerRegistry;
         $this->collectionExtensions = $collectionExtensions;
-        $this->tokenStorage = $tokenStorage;
+        $this->movieHydration = $movieHydratation;
     }
 
     /**
@@ -64,20 +64,12 @@ class MovieCollectionDataProvider implements CollectionDataProviderInterface
             }
         }
 
-        if (null !== $movies) {
-            $this->hydrateWithUser($movies);
-            return $movies;
+        if(null === $movies) {
+            $movies = $queryBuilder->getQuery()->getResult();
         }
 
-        return $queryBuilder->getQuery()->getResult();
-    }
+        $this->movieHydration->hydrateMovieWithUser($movies);
 
-    public function hydrateWithUser($movies)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof User) {
-
-        }
+        return $movies;
     }
 }

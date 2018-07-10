@@ -6,6 +6,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInter
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use App\Entity\User;
+use App\Utils\MovieHydratation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -13,13 +14,13 @@ class MovieItemDataProvider implements ItemDataProviderInterface
 {
     private $itemExtensions;
     private $managerRegistry;
-    private $tokenStorage;
+    private $movieHydratation;
 
-    public function __construct(ManagerRegistry $managerRegistry, iterable $itemExtensions, TokenStorageInterface $tokenStorage)
+    public function __construct(ManagerRegistry $managerRegistry, iterable $itemExtensions, MovieHydratation $movieHydratation)
     {
         $this->managerRegistry = $managerRegistry;
         $this->itemExtensions = $itemExtensions;
-        $this->tokenStorage = $tokenStorage;
+        $this->movieHydratation = $movieHydratation;
     }
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])
@@ -44,27 +45,9 @@ class MovieItemDataProvider implements ItemDataProviderInterface
             $movie = $queryBuilder->getQuery()->getOneOrNullResult();
         }
 
-        $this->hydrateWithUser($movie);
+        $this->movieHydratation->hydrateMovieWithUser($movie);
 
         return $movie;
 
-    }
-
-
-    public function hydrateWithUser($movie)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof User) {
-            if ($user->getMoviesLiked()->contains($movie)) {
-                $movie->liked = true;
-            }
-            if ($user->getMoviesWatched()->contains($movie)) {
-                $movie->watched = true;
-            }
-            if ($user->getMoviesWished()->contains($movie)) {
-                $movie->wished = true;
-            }
-        }
     }
 }

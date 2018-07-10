@@ -13,6 +13,7 @@ use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Identifier\IdentifierConverterInterface;
 use App\Entity\Movie;
 use App\Entity\User;
+use App\Utils\MovieHydratation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -23,18 +24,18 @@ class MovieSubresourceDataProvider implements SubresourceDataProviderInterface
 {
     private $collectionExtensions;
     private $itemExtensions;
-    private $tokenStorage;
+    private $movieHydratation;
     private $managerRegistry;
 
     /**
      * MovieSubresourceDataProvider constructor.
      */
-    public function __construct(ManagerRegistry $managerRegistry, iterable $collectionExtensions = [], iterable $itemExtensions = [], TokenStorageInterface $tokenStorage)
+    public function __construct(ManagerRegistry $managerRegistry, iterable $collectionExtensions = [], iterable $itemExtensions = [], MovieHydratation $movieHydratation)
     {
         $this->managerRegistry = $managerRegistry;
         $this->collectionExtensions = $collectionExtensions;
         $this->itemExtensions = $itemExtensions;
-        $this->tokenStorage = $tokenStorage;
+        $this->movieHydratation = $movieHydratation;
     }
 
 
@@ -97,7 +98,7 @@ class MovieSubresourceDataProvider implements SubresourceDataProviderInterface
         if (null === $movie) {
             $movie = $context['collection'] ? $query->getResult() : $query->getOneOrNullResult();
         }
-        $this->hydrateMovieWithUser($movie);
+        $this->movieHydratation->hydrateMovieWithUser($movie);
 
         return $movie;
     }
@@ -182,37 +183,5 @@ class MovieSubresourceDataProvider implements SubresourceDataProviderInterface
         $qb = $this->buildQuery($identifiers, $context, $queryNameGenerator, $qb, $alias, --$remainingIdentifiers, $topQueryBuilder);
 
         return $previousQueryBuilder->andWhere($qb->expr()->in($previousAlias, $qb->getDQL()));
-    }
-
-    public function hydrateMovieWithUser($result)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof User) {
-            if (!$result instanceof Movie) {
-                foreach ($result as $movie) {
-                    if ($user->getMoviesLiked()->contains($movie)) {
-                        $movie->liked = true;
-                    }
-                    if ($user->getMoviesWatched()->contains($movie)) {
-                        $movie->watched = true;
-                    }
-                    if ($user->getMoviesWished()->contains($movie)) {
-                        $movie->wished = true;
-                    }
-                }
-            } else {
-                if ($user->getMoviesLiked()->contains($result)) {
-                    $result->liked = true;
-                }
-                if ($user->getMoviesWatched()->contains($result)) {
-                    $result->watched = true;
-                }
-                if ($user->getMoviesWished()->contains($result)) {
-                    $result->wished = true;
-                }
-            }
-        }
-
     }
 }

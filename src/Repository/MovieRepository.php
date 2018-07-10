@@ -20,8 +20,9 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
-    public function getSimilars(Movie $movie, int $maxResult = 3)
+    public function getSimilars(Movie $movie)
     {
+        $maxResult = Movie::MAX_SIMILAR;
         $query = $this->createQueryBuilder('m')
             ->leftJoin('m.mySuggestions', 'my_suggestions')
             ->leftJoin('m.suggestions', 'suggestions')

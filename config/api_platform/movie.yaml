@@ -22,6 +22,8 @@ resources:
         method: get
         path: /movies/{id}/similars
         controller: App\Controller\Movie\GetSimilars
+        normalization_context:
+          groups: ['light_movie']
       casting:
         method: get
         path: /movies/{id}/casting

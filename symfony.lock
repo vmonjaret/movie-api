@@ -98,6 +98,9 @@
     "kevinrob/guzzle-cache-middleware": {
         "version": "v2.1.1"
     },
+    "lcobucci/jwt": {
+        "version": "3.2.2"
+    },
     "lexik/jwt-authentication-bundle": {
         "version": "2.3",
         "recipe": {

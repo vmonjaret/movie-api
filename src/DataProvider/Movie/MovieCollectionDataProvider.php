@@ -2,6 +2,7 @@
 
 namespace App\DataProvider\Movie;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterExtension;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
@@ -32,7 +33,7 @@ class MovieCollectionDataProvider implements CollectionDataProviderInterface
      *
      * @return array|\Traversable
      */
-    public function getCollection(string $resourceClass, string $operationName = null)
+    public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
     {
         $manager = $this->managerRegistry->getManagerForClass($resourceClass);
 
@@ -57,9 +58,9 @@ class MovieCollectionDataProvider implements CollectionDataProviderInterface
 
         $queryNameGenerator = new QueryNameGenerator();
         foreach ($this->collectionExtensions as $extension) {
-            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName);
-            if ($extension instanceof QueryResultCollectionExtensionInterface && $extension->supportsResult($resourceClass, $operationName)) {
-                $movies = $extension->getResult($queryBuilder, $resourceClass, $operationName);
+            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            if ($extension instanceof QueryResultCollectionExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                $movies = $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
             }
         }
 
@@ -76,17 +77,7 @@ class MovieCollectionDataProvider implements CollectionDataProviderInterface
         $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user instanceof User) {
-            foreach ($movies as $movie) {
-                if ($user->getMoviesLiked()->contains($movie)) {
-                    $movie->liked = true;
-                }
-                if ($user->getMoviesWatched()->contains($movie)) {
-                    $movie->watched = true;
-                }
-                if ($user->getMoviesWished()->contains($movie)) {
-                    $movie->wished = true;
-                }
-            }
+
         }
     }
 }

@@ -71,7 +71,7 @@ class MovieHydratation extends Controller
                         $community_note += $notation->getMark();
                     }
 
-                    $result->community_note = intval(round($community_note / sizeof($community_note_result)));
+                    $result->community_note = $community_note / sizeof($community_note_result);
                 }
             }
         }

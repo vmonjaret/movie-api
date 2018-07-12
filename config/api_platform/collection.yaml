@@ -1,0 +1,13 @@
+resources:
+  App\Entity\Collection:
+    collectionOperations:
+      get: ~
+      post:
+        method: post
+        access_control: is_granted('ROLE_USER')
+    itemOperations:
+      get: ~
+      put:
+        access_control: object.getUser() == user
+      delete:
+        access_control: object.getUser() == user

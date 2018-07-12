@@ -6,10 +6,9 @@ use App\Entity\Movie;
 use App\Entity\Notation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MovieHydratation extends Controller
+class MovieHydratation
 {
     private $tokenStorage;
     private $em;
@@ -41,10 +40,6 @@ class MovieHydratation extends Controller
                     }
                     if ($user->getMoviesWished()->contains($movie)) {
                         $movie->wished = true;
-                    }
-                    $mark = $this->em->getRepository(Notation::class)->findOneBy(['movie' => $result->getId(), 'user' => $user->getId()]);
-                    if($mark !== null){
-                        $result->mark = $mark->getMark();
                     }
                 }
             } else {

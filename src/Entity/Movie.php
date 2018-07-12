@@ -119,6 +119,11 @@ class Movie
     public $wished = false;
 
     /**
+     * @Groups({"movie"})
+     */
+    public $mark;
+
+    /**
      * Movie constructor.
      */
     public function __construct()

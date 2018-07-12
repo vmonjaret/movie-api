@@ -3,19 +3,26 @@
 namespace App\Utils;
 
 use App\Entity\Movie;
+use App\Entity\Notation;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MovieHydratation
+class MovieHydratation extends Controller
 {
     private $tokenStorage;
+    private $em;
 
     /**
      * MovieHydratation constructor.
+     * @param TokenStorageInterface $tokenStorage
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->em = $entityManager;
     }
 
 
@@ -35,6 +42,10 @@ class MovieHydratation
                     if ($user->getMoviesWished()->contains($movie)) {
                         $movie->wished = true;
                     }
+                    $mark = $this->em->getRepository(Notation::class)->findOneBy(['movie' => $result->getId(), 'user' => $user->getId()]);
+                    if($mark !== null){
+                        $result->mark = $mark->getMark();
+                    }
                 }
             } else {
                 if ($user->getMoviesLiked()->contains($result)) {
@@ -45,6 +56,11 @@ class MovieHydratation
                 }
                 if ($user->getMoviesWished()->contains($result)) {
                     $result->wished = true;
+                }
+
+                $mark = $this->em->getRepository(Notation::class)->findOneBy(['movie' => $result->getId(), 'user' => $user->getId()]);
+                if($mark !== null){
+                    $result->mark = $mark->getMark();
                 }
             }
         }

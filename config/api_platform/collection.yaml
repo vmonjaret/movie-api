@@ -11,3 +11,9 @@ resources:
         access_control: object.getUser() == user
       delete:
         access_control: object.getUser() == user
+      get_movies:
+        method: GET
+        path: /collections/{id}/movies
+        controller: App\Controller\Collection\GetMovies
+        normalization_context:
+          groups: ['light_movie']

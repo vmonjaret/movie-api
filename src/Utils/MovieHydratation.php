@@ -59,8 +59,19 @@ class MovieHydratation extends Controller
                 }
 
                 $mark = $this->em->getRepository(Notation::class)->findOneBy(['movie' => $result->getId(), 'user' => $user->getId()]);
-                if($mark !== null){
+                if ($mark !== null) {
                     $result->mark = $mark->getMark();
+                }
+
+                $community_note_result = $this->em->getRepository(Notation::class)->findBy(['movie' => $result->getId()]);
+                $community_note = 0;
+
+                if (sizeof($community_note_result) > 0){
+                    foreach ($community_note_result as $notation) {
+                        $community_note += $notation->getMark();
+                    }
+
+                    $result->community_note = intval(round($community_note / sizeof($community_note_result)));
                 }
             }
         }

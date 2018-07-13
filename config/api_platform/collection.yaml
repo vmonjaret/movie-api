@@ -1,12 +1,18 @@
 resources:
   App\Entity\Collection:
     collectionOperations:
-      get: ~
+      get:
+        method: get
+        normalization_context:
+          groups: ['collection', 'light_movie']
       post:
         method: post
         access_control: is_granted('ROLE_USER')
     itemOperations:
-      get: ~
+      get:
+        method: get
+        normalization_context:
+          groups: ['collection', 'light_movie']
       put:
         access_control: object.getUser() == user
       delete:

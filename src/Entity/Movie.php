@@ -126,7 +126,7 @@ class Movie
     /**
      * @Groups({"movie"})
      */
-    public $community_note;
+    public $communityNote;
 
     /**
      * Movie constructor.

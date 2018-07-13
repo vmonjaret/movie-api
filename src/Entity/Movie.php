@@ -122,6 +122,15 @@ class Movie
      * @ORM\ManyToMany(targetEntity="App\Entity\Collection", mappedBy="movies")
      */
     private $collections;
+    /**
+     * @Groups({"movie"})
+     */
+    public $mark;
+
+    /**
+     * @Groups({"movie"})
+     */
+    public $community_note;
 
     /**
      * Movie constructor.

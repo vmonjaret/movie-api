@@ -58,15 +58,15 @@ class MovieHydratation
                     $result->mark = $mark->getMark();
                 }
 
-                $community_note_result = $this->em->getRepository(Notation::class)->findBy(['movie' => $result->getId()]);
-                $community_note = 0;
+                $communityNoteResult = $result->getNotations();
+                $communityNote = 0;
 
-                if (sizeof($community_note_result) > 0){
-                    foreach ($community_note_result as $notation) {
-                        $community_note += $notation->getMark();
+                if (sizeof($communityNoteResult) > 0){
+                    foreach ($communityNoteResult as $notation) {
+                        $communityNote += $notation->getMark();
                     }
 
-                    $result->community_note = $community_note / sizeof($community_note_result);
+                    $result->communityNote = $communityNote / sizeof($communityNoteResult);
                 }
             }
         }

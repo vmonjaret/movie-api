@@ -123,6 +123,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $moviesWished;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Collection", mappedBy="user", orphanRemoval=true)
+     */
+    private $collections;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -132,6 +137,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->moviesLiked = new ArrayCollection();
         $this->moviesWatched = new ArrayCollection();
         $this->moviesWished  = new ArrayCollection();
+        $this->collections = new ArrayCollection();
     }
 
     public function getId()
@@ -423,6 +429,37 @@ class User implements AdvancedUserInterface, \Serializable
             // set the owning side to null (unless already changed)
             if ($notation->getUser() === $this) {
                 $notation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Collection[]
+     */
+    public function getCollections(): Collection
+    {
+        return $this->collections;
+    }
+
+    public function addCollection(Collection $collection): self
+    {
+        if (!$this->collections->contains($collection)) {
+            $this->collections[] = $collection;
+            $collection->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCollection(Collection $collection): self
+    {
+        if ($this->collections->contains($collection)) {
+            $this->collections->removeElement($collection);
+            // set the owning side to null (unless already changed)
+            if ($collection->getUser() === $this) {
+                $collection->setUser(null);
             }
         }
 

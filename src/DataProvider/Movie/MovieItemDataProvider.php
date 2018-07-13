@@ -5,29 +5,33 @@ namespace App\DataProvider\Movie;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
-use App\Entity\User;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use App\Utils\MovieHydratation;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MovieItemDataProvider implements ItemDataProviderInterface
+class MovieItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     private $itemExtensions;
-    private $managerRegistry;
+    private $movieRepository;
     private $movieHydratation;
 
-    public function __construct(ManagerRegistry $managerRegistry, iterable $itemExtensions, MovieHydratation $movieHydratation)
+    public function __construct(MovieRepository $movieRepository, iterable $itemExtensions, MovieHydratation $movieHydratation)
     {
-        $this->managerRegistry = $managerRegistry;
+        $this->movieRepository = $movieRepository;
         $this->itemExtensions = $itemExtensions;
         $this->movieHydratation = $movieHydratation;
     }
 
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    {
+        return Movie::class === $resourceClass;
+    }
+
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = [])
     {
-        $manager = $this->managerRegistry->getManagerForClass($resourceClass);
-        $repository = $manager->getRepository($resourceClass);
-        $queryBuilder = $repository->createQueryBuilder('o');
+        $queryBuilder = $this->movieRepository->createQueryBuilder('o');
         $queryNameGenerator = new QueryNameGenerator();
         $identifiers = ['id' => $id];
 
@@ -36,7 +40,6 @@ class MovieItemDataProvider implements ItemDataProviderInterface
         foreach ($this->itemExtensions as $extension) {
             $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
             if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                dump('toto');
                 $movie = $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
             }
         }

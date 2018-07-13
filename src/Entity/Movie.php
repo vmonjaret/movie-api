@@ -119,6 +119,10 @@ class Movie
     public $wished = false;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Collection", mappedBy="movies")
+     */
+    private $collections;
+    /**
      * @Groups({"movie"})
      */
     public $mark;
@@ -139,6 +143,7 @@ class Movie
         $this->suggestions = new ArrayCollection();
         $this->mySuggestions = new ArrayCollection();
         $this->castings = new ArrayCollection();
+        $this->collections = new ArrayCollection();
     }
 
     public function getId(): int
@@ -409,6 +414,34 @@ class Movie
             if ($casting->getMovie() === $this) {
                 $casting->setMovie(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Collection[]
+     */
+    public function getCollections(): Collection
+    {
+        return $this->collections;
+    }
+
+    public function addCollection(Collection $collection): self
+    {
+        if (!$this->collections->contains($collection)) {
+            $this->collections[] = $collection;
+            $collection->addMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCollection(Collection $collection): self
+    {
+        if ($this->collections->contains($collection)) {
+            $this->collections->removeElement($collection);
+            $collection->removeMovie($this);
         }
 
         return $this;

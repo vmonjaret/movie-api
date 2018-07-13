@@ -5,49 +5,39 @@ namespace App\DataProvider\Movie;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
-use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
-use ApiPlatform\Core\Exception\RuntimeException;
-use App\Entity\User;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use App\Utils\MovieHydratation;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MovieCollectionDataProvider implements CollectionDataProviderInterface
+class MovieCollectionDataProvider implements CollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    private $managerRegistry;
+    private $movieRepository;
     private $collectionExtensions;
     private $movieHydration;
 
-    public function __construct(ManagerRegistry $managerRegistry, iterable $collectionExtensions, MovieHydratation $movieHydratation)
+    public function __construct(MovieRepository $movieRepository, iterable $collectionExtensions, MovieHydratation $movieHydratation)
     {
-        $this->managerRegistry = $managerRegistry;
+        $this->movieRepository = $movieRepository;
         $this->collectionExtensions = $collectionExtensions;
         $this->movieHydration = $movieHydratation;
+    }
+
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    {
+        return Movie::class === $resourceClass;
     }
 
     /**
      * Retrieves a collection.
      *
-     * @throws ResourceClassNotSupportedException
-     *
      * @return array|\Traversable
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
     {
-        $manager = $this->managerRegistry->getManagerForClass($resourceClass);
-
-        $repository = $manager->getRepository($resourceClass);
-        if (!method_exists($repository, 'createQueryBuilder')) {
-            throw new RuntimeException('The repository class must have a "createQueryBuilder" method.');
-        }
-
         $movies = null;
 
-        /**
-         * @var QueryBuilder $queryBuilder;
-         */
-        $queryBuilder = $repository->createQueryBuilder('m');
+        $queryBuilder = $this->movieRepository->createQueryBuilder('m');
         if ("get_populars" === $operationName) {
             $queryBuilder->orderBy('m.popularity', 'DESC');
         } elseif ("get_recents" === $operationName) {

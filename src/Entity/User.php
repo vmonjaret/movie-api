@@ -144,6 +144,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $follows;
 
     /**
+     * @Groups("profile")
+     */
+    public $isFollow = false;
+
+    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="follows", cascade={"persist"})
      */
     private $followers;

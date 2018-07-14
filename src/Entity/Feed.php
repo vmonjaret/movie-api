@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"feed"}}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\FeedRepository")
  */
 class Feed
@@ -14,52 +17,62 @@ class Feed
     const TYPE_COMMENT = "comment";
     const TYPE_COLLECTION = "collection";
     const TYPE_NOTATION = "notation";
+    const FOLLOW = "follow";
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("feed")
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("feed")
      */
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="feeds")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="feeds", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"feed", "user"})
      */
     private $user;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups("feed")
      */
     private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @Groups({"feed", "profile"})
      */
     private $friend;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Movie")
+     * @Groups({"feed", "light_movie"})
      */
     private $movie;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Comment", inversedBy="feed")
+     * @Groups({"feed", "comment"})
      */
     private $comment;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Notation", inversedBy="feed")
+     * @Groups({"feed", "notation"})
      */
     private $notation;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Collection", inversedBy="feed")
+     * @Groups({"feed", "collection"})
      */
     private $collection;
 

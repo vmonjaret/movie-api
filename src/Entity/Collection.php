@@ -28,7 +28,7 @@ class Collection
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"collection", "collection_write"})
+     * @Groups({"collection", "collection_write", "feed"})
      */
     private $name;
 
@@ -46,7 +46,7 @@ class Collection
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Movie", inversedBy="collections")
-     * @Groups({"collection"})
+     * @Groups({"collection", "feed"})
      */
     private $movies;
 

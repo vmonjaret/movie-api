@@ -30,13 +30,13 @@ class Movie
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
-     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed"})
      */
     private $title;
 
@@ -48,13 +48,13 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"movie", "comment", "notation", "light_movie", "profile"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed"})
      */
     private $cover;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"movie", "light_movie"})
+     * @Groups({"movie", "light_movie", "feed"})
      */
     private $releasedAt;
 
@@ -79,13 +79,13 @@ class Movie
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
+     * @ApiSubresource(maxDepth=2)
      */
     private $notations;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="movie", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
+     * @ApiSubresource()
      */
     private $comments;
 

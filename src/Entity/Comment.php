@@ -27,7 +27,7 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"comment", "comment_write", "profile"})
+     * @Groups({"comment", "comment_write", "profile", "feed"})
      */
     private $content;
 

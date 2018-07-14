@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Entity\Feed;
 use App\Entity\Follow;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,6 +41,19 @@ class AddFollowUser
             $user->removeFollow($follow);
         } else {
             $user->addFollow($follow);
+            $feed = $this->em->getRepository(Feed::class)->findOneBy(array(
+                'user' => $user->getId(),
+                'friend' => $follow->getId(),
+                'type' => Feed::FOLLOW
+            ));
+            if (null === $feed) {
+                $feed = new Feed();
+                $feed->setType(Feed::FOLLOW)
+                    ->setUser($user)
+                    ->setFriend($follow);
+
+                $this->em->persist($feed);
+            }
         }
 
         $this->em->flush();

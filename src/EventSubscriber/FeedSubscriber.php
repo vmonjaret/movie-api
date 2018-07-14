@@ -7,6 +7,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Collection;
 use App\Entity\Comment;
 use App\Entity\Feed;
+use App\Entity\Follow;
 use App\Entity\Notation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

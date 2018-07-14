@@ -33,7 +33,7 @@ class FeedCollectionDataProvider implements CollectionDataProviderInterface, Res
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return $resourceClass instanceof Feed;
+        return Feed::class === $resourceClass;
     }
 
     /**
@@ -46,14 +46,14 @@ class FeedCollectionDataProvider implements CollectionDataProviderInterface, Res
     public function getCollection(string $resourceClass, string $operationName = null, $context = [])
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        /*$ids = array();
+        $ids = array();
         foreach ($user->getFollows() as $follow) {
             $ids[] = $follow->getId();
-        }*/
+        }
 
         $queryBuilder = $this->feedRepository->createQueryBuilder('f')
-            //->where('f.user IN :follows')
-            //->setParameter('follows', $ids)
+            ->where('f.user IN (:follows)')
+            ->setParameter('follows', $ids)
             ->orderBy('f.createdAt', 'DESC')
         ;
 

@@ -2,18 +2,12 @@
 
 namespace App\Controller\Collection;
 
-use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Entity\Collection;
 use App\Entity\CollectionItem;
-use App\Entity\Movie;
-use App\Entity\User;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class AddMovie
 {

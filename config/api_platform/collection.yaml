@@ -30,10 +30,11 @@ resources:
         path: /collections/movies
         controller: App\Controller\Collection\AddMovie
         swagger_context:
-          summary: Register, returning a valid token on success
+          summary: Add a movie to a collection
           response:
             204:
               description: "Movie successfully added to collection"
             403:
               description: "Access denied"
-    itemOperations: null
+    itemOperations:
+      get: ~

@@ -76,3 +76,12 @@ resources:
                 properties:
                   token:
                     type: string
+
+  App\Entity\Follow:
+    collectionOperations:
+      add_followed_user:
+        method: post
+        path: /users/follow
+        controller: App\Controller\User\AddFollowUser
+    itemOperations:
+      get: ~

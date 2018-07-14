@@ -2,6 +2,7 @@
 
 namespace App\Controller\Notation;
 
+use App\Entity\Feed;
 use App\Entity\Notation;
 use App\Repository\NotationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -46,6 +47,14 @@ class AddNotation extends Controller
             $notation->setMark($data->getMark());
         } else {
             $this->entityManager->persist($data);
+
+            $feed = new Feed();
+            $feed->setUser($user)
+                ->setType(Feed::TYPE_NOTATION)
+                ->setNotation($data)
+                ->setMovie($data->getMovie())
+            ;
+            $this->entityManager->persist($feed);
         }
 
         $this->entityManager->flush();

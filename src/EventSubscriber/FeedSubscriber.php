@@ -58,13 +58,6 @@ class FeedSubscriber implements EventSubscriberInterface
                 ->setType(Feed::TYPE_COLLECTION)
                 ->setCollection($object)
             ;
-        } elseif ($object instanceof Notation && $method === Request::METHOD_POST) {
-            $feed = new Feed();
-            $feed->setUser($object->getUser())
-                ->setType(Feed::TYPE_NOTATION)
-                ->setNotation($object)
-                ->setMovie($object->getMovie())
-            ;
         }
 
         if (null !== $feed) {

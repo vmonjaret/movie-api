@@ -50,7 +50,7 @@ class Notation
      *      maxMessage = "he mark cannot be superior to {{ limit }}"
      * )
      * @ORM\Column(name="mark", type="integer")
-     * @Groups({"notation", "notation_write", "profile"})
+     * @Groups({"notation", "notation_write", "profile", "feed"})
      */
     private $mark;
 

@@ -35,7 +35,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user", "comment", "notation", "collection"})
+     * @Groups({"user", "comment", "notation", "collection", "feed"})
      */
     private $id;
 
@@ -50,7 +50,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=25, unique=true)
-     * @Groups({"user", "comment", "user_write", "profile", "notation", "collection"})
+     * @Groups({"user", "comment", "user_write", "profile", "notation", "collection", "feed"})
      */
     private $username;
 

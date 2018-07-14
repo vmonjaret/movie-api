@@ -87,7 +87,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="user", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
+     * @ApiSubresource()
      * @Groups("profile")
      */
     private $notations;
@@ -131,6 +131,12 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $collections;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource()
+     */
+    private $feeds;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -141,6 +147,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->moviesWatched = new ArrayCollection();
         $this->moviesWished  = new ArrayCollection();
         $this->collections = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
     }
 
     public function getId()
@@ -463,6 +470,37 @@ class User implements AdvancedUserInterface, \Serializable
             // set the owning side to null (unless already changed)
             if ($collection->getUser() === $this) {
                 $collection->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Feed[]
+     */
+    public function getFeeds(): Collection
+    {
+        return $this->feeds;
+    }
+
+    public function addFeed(Feed $feed): self
+    {
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds[] = $feed;
+            $feed->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed): self
+    {
+        if ($this->feeds->contains($feed)) {
+            $this->feeds->removeElement($feed);
+            // set the owning side to null (unless already changed)
+            if ($feed->getUser() === $this) {
+                $feed->setUser(null);
             }
         }
 

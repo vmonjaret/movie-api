@@ -36,7 +36,7 @@ class Notation
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="notations", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @ApiSubresource(maxDepth=1)
+     * @ApiSubresource(maxDepth=0)
      * @Groups({"notation"})
      */
     private $user;

@@ -139,8 +139,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="follows", cascade={"persist"})
-     *
-     * @Groups({"profile"})
      */
     private $followers;
 

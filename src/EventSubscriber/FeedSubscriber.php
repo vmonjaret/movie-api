@@ -51,7 +51,7 @@ class FeedSubscriber implements EventSubscriberInterface
                 ->setComment($object)
                 ->setMovie($object->getMovie())
             ;
-        } elseif ($object instanceof Collection && $method === Request::METHOD_POST) {
+        } elseif ($object instanceof Collection && $method === Request::METHOD_POST && $object->getIsPublic()) {
             $feed = new Feed();
             $feed->setUser($object->getUser())
                 ->setType(Feed::TYPE_COLLECTION)

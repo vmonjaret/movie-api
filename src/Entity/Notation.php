@@ -60,6 +60,11 @@ class Notation
      */
     private $createdAt;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Feed", mappedBy="notation", orphanRemoval=true)
+     */
+    private $feed;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();

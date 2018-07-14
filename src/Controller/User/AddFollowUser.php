@@ -1,22 +1,24 @@
 <?php
 
-namespace App\Controller\Collection;
+namespace App\Controller\User;
 
-use App\Entity\Collection;
-use App\Entity\CollectionItem;
+use App\Entity\Follow;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Response;
 
-class AddMovie
+class AddFollowUser
 {
+
     private $tokenStorage;
     private $em;
 
     /**
-     * ListMovies constructor.
-     * @param $tokenStorage
+     * AddFollowUser constructor.
+     * @param TokenStorageInterface $tokenStorage
+     * @param EntityManagerInterface $em
      */
     public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $em)
     {
@@ -26,27 +28,22 @@ class AddMovie
 
     /**
      * @IsGranted("ROLE_USER")
+     * @param Follow $data
+     * @return Response
      */
-    public function __invoke(CollectionItem $data)
+    public function __invoke(Follow $data)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        /**
-         * @var Collection $collection
-         */
-        $collection = $data->getCollection();
-        if ($user !== $collection->getUser()) {
-            return new Response(null, 403);
-        }
+        $follow = $data->getFollow();
 
-        if ($collection->getMovies()->contains($data->getMovie())) {
-            $collection->removeMovie($data->getMovie());
+        if ($user->getFollows()->contains($follow)) {
+            $user->removeFollow($follow);
         } else {
-            $collection->addMovie($data->getMovie());
+            $user->addFollow($follow);
         }
 
         $this->em->flush();
 
         return new Response(null, 204);
     }
-
 }

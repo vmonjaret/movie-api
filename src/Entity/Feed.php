@@ -49,17 +49,17 @@ class Feed
     private $movie;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comment")
+     * @ORM\OneToOne(targetEntity="App\Entity\Comment", inversedBy="feed")
      */
     private $comment;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Notation", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Notation", inversedBy="feed")
      */
     private $notation;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Collection", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Collection", inversedBy="feed")
      */
     private $collection;
 

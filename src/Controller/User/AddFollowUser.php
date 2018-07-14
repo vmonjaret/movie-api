@@ -27,18 +27,19 @@ class AddFollowUser
     }
 
     /**
+     * @IsGranted("ROLE_USER")
+     * @param Follow $data
      * @return Response
      */
     public function __invoke(Follow $data)
     {
-        dump($data);
         $user = $this->tokenStorage->getToken()->getUser();
         $follow = $data->getFollow();
 
-        if ($user->getFollows->contains($follow)) {
+        if ($user->getFollows()->contains($follow)) {
             $user->removeFollow($follow);
         } else {
-            $user->addFollows($follow);
+            $user->addFollow($follow);
         }
 
         $this->em->flush();

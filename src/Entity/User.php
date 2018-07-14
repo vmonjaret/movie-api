@@ -139,6 +139,8 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="follows", cascade={"persist"})
+     *
+     * @Groups({"profile"})
      */
     private $followers;
 
@@ -146,16 +148,15 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->roles = array('ROLE_USER');
         $this->comments = new ArrayCollection();
+        $this->notations = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->favoritesGenres = new ArrayCollection();
         $this->moviesLiked = new ArrayCollection();
         $this->moviesWatched = new ArrayCollection();
         $this->moviesWished  = new ArrayCollection();
         $this->collections = new ArrayCollection();
-        $this->followedUsers = new ArrayCollection();
-        $this->followers = new ArrayCollection();
-        $this->notations = new ArrayCollection();
         $this->follows = new ArrayCollection();
+        $this->followers = new ArrayCollection();
     }
 
     public function getId()
@@ -545,34 +546,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         if ($this->moviesWished->contains($moviesWished)) {
             $this->moviesWished->removeElement($moviesWished);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getFollowedUsers(): Collection
-    {
-        return $this->followedUsers;
-    }
-
-    public function addFollowedUser(User $followedUser): self
-    {
-        if (!$this->followedUsers->contains($followedUser)) {
-            $this->followedUsers[] = $followedUser;
-            $followedUser->addFollower($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFollowedUser(User $followedUser): self
-    {
-        if ($this->followedUsers->contains($followedUser)) {
-            $this->followedUsers->removeElement($followedUser);
-            $followedUser->removeFollower($this);
         }
 
         return $this;

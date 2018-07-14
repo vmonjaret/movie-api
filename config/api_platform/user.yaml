@@ -58,6 +58,12 @@ resources:
         method: get
         path: /users/followers
         controller: App\Controller\User\GetFollowers
+      get_collections:
+        method: get
+        path: /users/collections
+        controller: App\Controller\User\GetCollections
+        normalization_context:
+          groups: ['collection', 'light_movie']
     itemOperations:
       get:
         access_control: is_granted('ROLE_USER')

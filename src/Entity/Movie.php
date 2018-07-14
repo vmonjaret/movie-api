@@ -30,13 +30,13 @@ class Movie
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
-     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed", "collection"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed", "collection"})
      */
     private $title;
 
@@ -48,13 +48,13 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed"})
+     * @Groups({"movie", "comment", "notation", "light_movie", "profile", "feed", "collection"})
      */
     private $cover;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"movie", "light_movie", "feed"})
+     * @Groups({"movie", "light_movie", "feed", "collection"})
      */
     private $releasedAt;
 

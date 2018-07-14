@@ -129,6 +129,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Collection", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource()
      */
     private $collections;
 

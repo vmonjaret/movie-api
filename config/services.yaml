@@ -43,6 +43,10 @@ services:
     'App\DataProvider\Collection\CollectionItemDataProvider':
         arguments:
             $itemExtensions: !tagged api_platform.doctrine.orm.query_extension.item
+    'App\DataProvider\Collection\CollectionSubresourceDataProvider':
+        arguments:
+            $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection
+            $itemExtensions: !tagged api_platform.doctrine.orm.query_extension.item
     'App\DataProvider\Feed\FeedCollectionDataProvider':
         arguments:
             $collectionExtensions: !tagged api_platform.doctrine.orm.query_extension.collection

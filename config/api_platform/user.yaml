@@ -1,7 +1,10 @@
 resources:
   App\Entity\User:
     collectionOperations:
-      get: ~
+      get:
+        access_control: is_granted('ROLE_USER')
+        attributes:
+            normalization_context: ['profile']
       get_me:
         method: GET
         path: /users/me
@@ -56,7 +59,8 @@ resources:
         path: /users/followers
         controller: App\Controller\User\GetFollowers
     itemOperations:
-      get: ~
+      get:
+        access_control: is_granted('ROLE_USER')
       login:
         method: POST
         route_name: api_login_check

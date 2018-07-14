@@ -52,6 +52,11 @@ class Comment
      */
     private $user;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Feed", mappedBy="comment", orphanRemoval=true)
+     */
+    private $feed;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();

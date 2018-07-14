@@ -88,7 +88,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Notation", mappedBy="user", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
+     * @ApiSubresource()
      * @Groups("profile")
      */
     private $notations;
@@ -133,9 +133,20 @@ class User implements AdvancedUserInterface, \Serializable
     private $collections;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource()
+     */
+    private $feeds;
+
+    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="followers", cascade={"persist"})
      */
     private $follows;
+
+    /**
+     * @Groups("profile")
+     */
+    public $isFollow = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="follows", cascade={"persist"})
@@ -151,8 +162,9 @@ class User implements AdvancedUserInterface, \Serializable
         $this->favoritesGenres = new ArrayCollection();
         $this->moviesLiked = new ArrayCollection();
         $this->moviesWatched = new ArrayCollection();
-        $this->moviesWished  = new ArrayCollection();
+        $this->moviesWished = new ArrayCollection();
         $this->collections = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
         $this->follows = new ArrayCollection();
         $this->followers = new ArrayCollection();
     }
@@ -439,6 +451,7 @@ class User implements AdvancedUserInterface, \Serializable
 
         return $this;
     }
+
     public function removeNotation(Notation $notation): self
     {
         if ($this->notations->contains($notation)) {
@@ -478,6 +491,24 @@ class User implements AdvancedUserInterface, \Serializable
             if ($collection->getUser() === $this) {
                 $collection->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Feed[]
+     */
+    public function getFeeds(): Collection
+    {
+        return $this->feeds;
+    }
+
+    public function addFeed(Feed $feed): self
+    {
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds[] = $feed;
+            $feed->setUser($this);
         }
 
         return $this;
@@ -588,6 +619,19 @@ class User implements AdvancedUserInterface, \Serializable
         if (!$this->follows->contains($follow)) {
             $this->follows[] = $follow;
             $follow->addFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed): self
+    {
+        if ($this->feeds->contains($feed)) {
+            $this->feeds->removeElement($feed);
+            // set the owning side to null (unless already changed)
+            if ($feed->getUser() === $this) {
+                $feed->setUser(null);
+            }
         }
 
         return $this;

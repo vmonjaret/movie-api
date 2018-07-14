@@ -11,10 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={
- *          "normalizationContext"={"groups"={"collection"}},
- *          "denormalizationContext"={"groups"={"collection_write"}}
- *     }
+ *     normalizationContext={"groups"={"collection"}},
+ *     denormalizationContext={"groups"={"collection_write"}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CollectionRepository")
  */
@@ -58,6 +56,11 @@ class Collection
      * @Groups({"collection"})
      */
     private $user;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Feed", mappedBy="collection", orphanRemoval=true)
+     */
+    private $feed;
 
     public function __construct()
     {

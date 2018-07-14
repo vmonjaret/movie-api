@@ -47,6 +47,14 @@ resources:
           method: get
           path: /users/me/stats/marks
           controller: App\Controller\User\StatsMarkRepatition
+      get_follows:
+        method: get
+        path: /users/follows
+        controller: App\Controller\User\GetFollows
+      get_followers:
+        method: get
+        path: /users/followers
+        controller: App\Controller\User\GetFollowers
     itemOperations:
       get: ~
       login:
@@ -76,3 +84,11 @@ resources:
                 properties:
                   token:
                     type: string
+  App\Entity\Follow:
+    collectionOperations:
+      add_followed_user:
+        method: post
+        path: /users/follow
+        controller: App\Controller\User\AddFollowUser
+    itemOperations:
+      get: ~

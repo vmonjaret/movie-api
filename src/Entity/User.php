@@ -19,7 +19,8 @@ use App\Entity\Movie as Movie;
  * @ApiResource(
  *     attributes={
  *          "normalization_context"={"groups"={"user", "profile"}},
- *          "denormalization_context"={"groups"={"user_write"}}
+ *          "denormalization_context"={"groups"={"user_write"}},
+ *          "force_eager"=false
  *     }
  * )
  * @ORM\Table(name="`user`")
@@ -131,16 +132,29 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $collections;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="followers", cascade={"persist"})
+     */
+    private $follows;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="follows", cascade={"persist"})
+     */
+    private $followers;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
         $this->comments = new ArrayCollection();
+        $this->notations = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->favoritesGenres = new ArrayCollection();
         $this->moviesLiked = new ArrayCollection();
         $this->moviesWatched = new ArrayCollection();
         $this->moviesWished  = new ArrayCollection();
         $this->collections = new ArrayCollection();
+        $this->follows = new ArrayCollection();
+        $this->followers = new ArrayCollection();
     }
 
     public function getId()
@@ -464,6 +478,126 @@ class User implements AdvancedUserInterface, \Serializable
             if ($collection->getUser() === $this) {
                 $collection->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function addMoviesLiked(Movie $moviesLiked): self
+    {
+        if (!$this->moviesLiked->contains($moviesLiked)) {
+            $this->moviesLiked[] = $moviesLiked;
+        }
+
+        return $this;
+    }
+
+    public function removeMoviesLiked(Movie $moviesLiked): self
+    {
+        if ($this->moviesLiked->contains($moviesLiked)) {
+            $this->moviesLiked->removeElement($moviesLiked);
+        }
+
+        return $this;
+    }
+
+    public function addMoviesWatched(Movie $moviesWatched): self
+    {
+        if (!$this->moviesWatched->contains($moviesWatched)) {
+            $this->moviesWatched[] = $moviesWatched;
+        }
+
+        return $this;
+    }
+
+    public function removeMoviesWatched(Movie $moviesWatched): self
+    {
+        if ($this->moviesWatched->contains($moviesWatched)) {
+            $this->moviesWatched->removeElement($moviesWatched);
+        }
+
+        return $this;
+    }
+
+    public function addMoviesWished(Movie $moviesWished): self
+    {
+        if (!$this->moviesWished->contains($moviesWished)) {
+            $this->moviesWished[] = $moviesWished;
+        }
+
+        return $this;
+    }
+
+    public function removeMoviesWished(Movie $moviesWished): self
+    {
+        if ($this->moviesWished->contains($moviesWished)) {
+            $this->moviesWished->removeElement($moviesWished);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function addFollower(User $follower): self
+    {
+        if (!$this->followers->contains($follower)) {
+            $this->followers[] = $follower;
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(User $follower): self
+    {
+        if ($this->followers->contains($follower)) {
+            $this->followers->removeElement($follower);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getFollows(): Collection
+    {
+        return $this->follows;
+    }
+
+    public function addFollow(User $follow): self
+    {
+        if (!$this->follows->contains($follow)) {
+            $this->follows[] = $follow;
+            $follow->addFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollow(User $follow): self
+    {
+        if ($this->follows->contains($follow)) {
+            $this->follows->removeElement($follow);
+            $follow->removeFollower($this);
         }
 
         return $this;

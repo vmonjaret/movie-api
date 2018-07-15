@@ -34,6 +34,10 @@ resources:
         method: get
         path: /movies/{id}/casting
         controller: App\Controller\Movie\GetCasting
+      selectedComments:
+        method: get
+        path: /movies/{id}/selected-comments
+        controller: App\Controller\Movie\GetSelectedComments
       like:
         method: put
         path: /movies/{id}/like

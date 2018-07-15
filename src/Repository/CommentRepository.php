@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -18,6 +19,25 @@ class CommentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Comment::class);
     }
+
+    public function getMovieSelectedComments(Movie $movie)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->select('c.id', 'c.content', 'c.createdAt')
+            ->leftJoin('c.user', 'u')
+            ->addSelect('u.id as user_id', 'u.username as user_username')
+            ->innerJoin('u.notation', 'n')
+            ->where('c.movie = :movieId')
+            ->andWhere('n.movie = :movieId')
+            ->andWhere('n.user = c.user')
+            ->setParameter('movieId', $movie->getId())
+            ->setMaxResults(2)
+            ->getQuery()
+        ;
+
+        return $query->getArrayResult();
+    }
+
 
 //    /**
 //     * @return Comment[] Returns an array of Comment objects

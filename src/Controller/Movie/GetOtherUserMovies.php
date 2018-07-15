@@ -8,28 +8,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class GetUserMovies
+class GetOtherUserMovies
 {
-    private $tokenStorage;
-
-    /**
-     * GetMe constructor.
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
-    }
-
     /**
      * @IsGranted("ROLE_USER")
      */
-    public function __invoke()
+    public function __invoke(User $user)
     {
-        /**
-         * @var User $user
-         */
-        $user = $this->tokenStorage->getToken()->getUser();
-
         $movies = new ArrayCollection();
         $moviesWished = $user->getMoviesWished();
         $this->addToArray($movies, $moviesWished, 'wished');

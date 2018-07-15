@@ -94,6 +94,21 @@ resources:
                 properties:
                   token:
                     type: string
+      get_other_favorite_stats:
+          method: get
+          path: /users/{id}/stats/favorites
+          controller: App\Controller\User\OtherStatsMoviesByGenre
+      get_other_mark_repartition:
+          method: get
+          path: /users/{id}/stats/marks
+          controller: App\Controller\User\OtherStatsMarkRepatition
+      get_other_user_movies:
+        method: GET
+        path: /users/{id}/movies
+        controller: App\Controller\Movie\GetOtherUserMovies
+        normalization_context:
+          groups: ['light_movie']
+
   App\Entity\Follow:
     collectionOperations:
       add_followed_user:

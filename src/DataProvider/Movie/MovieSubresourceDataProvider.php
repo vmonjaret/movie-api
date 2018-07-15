@@ -6,17 +6,19 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\FilterEagerLoadingExtension;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use ApiPlatform\Core\DataProvider\SubresourceDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
 use ApiPlatform\Core\Exception\RuntimeException;
 use ApiPlatform\Core\Identifier\IdentifierConverterInterface;
+use App\Entity\Movie;
 use App\Utils\MovieHydratation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\QueryBuilder;
 
-class MovieSubresourceDataProvider implements SubresourceDataProviderInterface
+class MovieSubresourceDataProvider implements SubresourceDataProviderInterface, RestrictedDataProviderInterface
 {
     private $collectionExtensions;
     private $itemExtensions;
@@ -34,6 +36,10 @@ class MovieSubresourceDataProvider implements SubresourceDataProviderInterface
         $this->movieHydratation = $movieHydratation;
     }
 
+    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    {
+        return Movie::class === $resourceClass;
+    }
 
     /**
      * Retrieves a subresource of an item.

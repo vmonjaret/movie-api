@@ -10,7 +10,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"achievement"}}
+ *     normalizationContext={"groups"={"achievement"}},
+ *     collectionOperations={"get"},
+ *     itemOperations={}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\AchievementRepository")
  */

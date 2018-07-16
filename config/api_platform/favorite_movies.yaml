@@ -10,5 +10,4 @@ resources:
         method: post
         path: /movies/favorites
         controller: App\Controller\Movie\AddFavorite
-    itemOperations:
-      get: ~
+    itemOperations: []

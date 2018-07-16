@@ -6,5 +6,4 @@ resources:
         path: /users/movies/seen
         controller: App\Controller\Movie\GetSeen
 
-    itemOperations:
-      get: ~
+    itemOperations: []

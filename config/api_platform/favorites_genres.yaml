@@ -10,5 +10,4 @@ resources:
         method: post
         path: /genres/favorites
         controller: App\Controller\Genre\AddFavorite
-    itemOperations:
-      get: ~
+    itemOperations: []

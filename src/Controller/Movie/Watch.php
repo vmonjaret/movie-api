@@ -22,6 +22,7 @@ class Watch
      * @param MovieRepository $movieRepository
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $entityManager
+     * @param AchievementManager $achievementManager
      */
     public function __construct(MovieRepository $movieRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager, AchievementManager $achievementManager)
     {
@@ -44,7 +45,7 @@ class Watch
             $user->removeMovieWatched($movie);
         } else {
             $user->addMovieWatched($movie);
-            $this->achievementManager->movieAchievement($user);
+            $this->achievementManager->movieWatchAchievement($user);
         }
 
         $this->entityManager->flush();

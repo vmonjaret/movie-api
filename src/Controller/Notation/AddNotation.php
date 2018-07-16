@@ -4,6 +4,7 @@ namespace App\Controller\Notation;
 
 use App\Entity\Feed;
 use App\Entity\Notation;
+use App\Manager\AchievementManager;
 use App\Repository\NotationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,18 +17,21 @@ class AddNotation extends Controller
     private $notationRepository;
     private $tokenStorage;
     private $entityManager;
+    private $achievementManager;
 
     /**
      * Like constructor.
      * @param NotationRepository $notationRepository
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $entityManager
+     * @param AchievementManager $achievementManager
      */
-    public function __construct(NotationRepository $notationRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager)
+    public function __construct(NotationRepository $notationRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager, AchievementManager $achievementManager)
     {
         $this->notationRepository = $notationRepository;
         $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
+        $this->achievementManager = $achievementManager;
     }
 
     /**
@@ -56,6 +60,8 @@ class AddNotation extends Controller
             ;
             $this->entityManager->persist($feed);
         }
+
+        $this->achievementManager->movieNotationAchievement($user);
 
         $this->entityManager->flush();
 

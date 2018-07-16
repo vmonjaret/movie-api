@@ -6,6 +6,7 @@ use App\Entity\Achievement;
 use App\Entity\User;
 use App\Repository\AchievementRepository;
 use App\Repository\CommentRepository;
+use App\Repository\NotationRepository;
 use App\Utils\NotificationCenter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
@@ -16,6 +17,7 @@ class AchievementManager
     private $achievementRepository;
     private $entityManager;
     private $notificationCenter;
+    private $notationRepository;
 
     /**
      * AchievementManager constructor.
@@ -23,13 +25,16 @@ class AchievementManager
      * @param AchievementRepository $achievementRepository
      * @param EntityManagerInterface $entityManager
      * @param NotificationCenter $notificationCenter
+     * @param NotationRepository $notationRepository
      */
-    public function __construct(CommentRepository $commentRepository, AchievementRepository $achievementRepository, EntityManagerInterface $entityManager, NotificationCenter $notificationCenter)
+    public function __construct(CommentRepository $commentRepository, AchievementRepository $achievementRepository,
+                                EntityManagerInterface $entityManager, NotificationCenter $notificationCenter, NotationRepository $notationRepository)
     {
         $this->commentRepository = $commentRepository;
         $this->achievementRepository = $achievementRepository;
         $this->entityManager = $entityManager;
         $this->notificationCenter = $notificationCenter;
+        $this->notationRepository = $notationRepository;
     }
 
     public function commentsAchievement(User $user)
@@ -65,7 +70,7 @@ class AchievementManager
         }
     }
 
-    public function movieAchievement(User $user)
+    public function movieWatchAchievement(User $user)
     {
         $count = count($user->getMoviesWatched());
 
@@ -110,6 +115,39 @@ class AchievementManager
 
                 $this->entityManager->flush();
             }
+        }
+    }
+
+    public function movieNotationAchievement(User $user)
+    {
+        $count = $this->commentRepository->count(array('user' => $user));
+
+        // Achievement "judge" : Rate a movie
+        if ($count >= 1) {
+            $badge = $this->achievementRepository->getUserAchievement($user, Achievement::JUDGE);
+            if (null === $badge) {
+                $badge = $this->achievementRepository->findOneBy(array('type' => Achievement::JUDGE));
+                $badgeName = $badge->getName();
+                $user->addAchievement($badge);
+
+                $this->notificationCenter->sendNotification($user, "Achievement", "Vous avez gagné le badge ${badgeName}", "/profile");
+
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    public function movieRandomAchievement(User $user)
+    {
+        $badge = $this->achievementRepository->getUserAchievement($user, Achievement::UNDECIDED);
+        if (null === $badge) {
+            $badge = $this->achievementRepository->findOneBy(array('type' => Achievement::UNDECIDED));
+            $badgeName = $badge->getName();
+            $user->addAchievement($badge);
+
+            $this->notificationCenter->sendNotification($user, "Achievement", "Vous avez gagné le badge ${badgeName}", "/profile");
+
+            $this->entityManager->flush();
         }
     }
 }

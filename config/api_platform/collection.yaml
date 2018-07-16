@@ -36,4 +36,5 @@ resources:
               description: "Movie successfully added to collection"
             403:
               description: "Access denied"
-    itemOperations: []
+    itemOperations:
+      get: ~

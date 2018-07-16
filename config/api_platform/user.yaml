@@ -115,4 +115,5 @@ resources:
         method: post
         path: /users/follow
         controller: App\Controller\User\AddFollowUser
-    itemOperations: []
+    itemOperations:
+      get: ~

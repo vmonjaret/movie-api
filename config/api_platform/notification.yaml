@@ -1,0 +1,21 @@
+resources:
+  App\Entity\Notification:
+    collectionOperations:
+      get:
+        method: get
+        path: /notifications
+        controller: App\Controller\Notification\GetAllNotification
+
+      mark_as_seen:
+        method: get
+        path: /notifications/mark_all_as_seen
+        controller: App\Controller\Notification\MarkAllAsSeen
+        defaults:
+          _api_receive: false
+    itemOperations:
+      mark_as_seen:
+        method: get
+        path: /notifications/{id}/mark_as_seen
+        controller: App\Controller\Notification\MarkAsSeen
+        defaults:
+          _api_receive: false

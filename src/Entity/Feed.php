@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"={"feed"}},
  *     order={"createdAt": "DESC"},
  *     collectionOperations={"get"},
- *     itemOperations={}
+ *     itemOperations={"get"}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\FeedRepository")
  */

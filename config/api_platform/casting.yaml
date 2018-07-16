@@ -2,4 +2,5 @@ resources:
   App\Entity\Casting:
     collectionOperations:
       get: ~
-    itemOperations: []
+    itemOperations:
+      get: ~

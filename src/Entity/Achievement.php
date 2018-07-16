@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"groups"={"achievement"}},
  *     collectionOperations={"get"},
- *     itemOperations={}
+ *     itemOperations={"get"}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\AchievementRepository")
  */
@@ -23,19 +23,19 @@ class Achievement
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"achievement"})
+     * @Groups({"achievement", "profile"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"achievement"})
+     * @Groups({"achievement", "profile"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"achievement"})
+     * @Groups({"achievement", "profile"})
      */
     private $description;
 

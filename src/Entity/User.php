@@ -159,6 +159,7 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Achievement", mappedBy="users")
+     * @Groups("profile")
      */
     private $achievements;
 

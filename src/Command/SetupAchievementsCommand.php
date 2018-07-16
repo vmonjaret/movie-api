@@ -42,7 +42,9 @@ class SetupAchievementsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $achievements = array(
+            array('name' => 'Stalker', 'description' => 'Consulter un autre profil', 'type' => Achievement::STALKER),
             array('name' => 'Auteur', 'description' => 'Ecrire un commentaire sur un film', 'type' => Achievement::AUTHOR),
+            array('name' => 'Ecrivain', 'description' => 'Commentaire de plus de 100 caractères', 'type' => Achievement::WRITER),
         );
 
         foreach ($achievements as $achievement) {

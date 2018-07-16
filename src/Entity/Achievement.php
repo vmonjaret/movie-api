@@ -12,13 +12,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"groups"={"achievement"}},
  *     collectionOperations={"get"},
- *     itemOperations={}
+ *     itemOperations={"get"}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\AchievementRepository")
  */
 class Achievement
 {
     const AUTHOR = 'author';
+    const WRITER = 'writer';
+    const STALKER = 'stalker';
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

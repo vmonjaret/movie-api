@@ -33,22 +33,22 @@ class AddFollowUser
 
     /**
      * @IsGranted("ROLE_USER")
-     * @param Follow $data
-     * @return Response
      */
     public function __invoke(Follow $data)
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $follow = $data->getFollow();
-        $follower = $user->getUsername();
 
         if ($user->getFollows()->contains($follow)) {
             $user->removeFollow($follow);
         } else {
             $user->addFollow($follow);
+            $follower = $user->getUsername();
+            $followerId = $user->getId();
             $notificationManager = $this->container->get('mgilet.notification');
-            $notif = $notificationManager->createNotification('Hello');
-            $notif->setMessage("${follower} vous suit");
+            $notif = $notificationManager->createNotification('Follow');
+            $notif->setMessage("${follower} vous suit")
+                ->setLink("/profile/${followerId}");
 
             $notificationManager->addNotification(array($follow), $notif, true);
 

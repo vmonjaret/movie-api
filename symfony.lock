@@ -110,6 +110,9 @@
             "ref": "a66e8a7b75a1825cf2414d5dd53c7ed38c8654d1"
         }
     },
+    "mgilet/notification-bundle": {
+        "version": "3.0.1"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },

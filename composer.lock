@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f839f88fe6f514b9b33a306c0efa57f1",
+    "content-hash": "cfdda0ffe8274bba3df818bd649e3453",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -1657,6 +1657,52 @@
                 "symfony"
             ],
             "time": "2018-07-06T10:21:24+00:00"
+        },
+        {
+            "name": "mgilet/notification-bundle",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maximilienGilet/notification-bundle.git",
+                "reference": "b43dd7264752d2420a490e6135a76abf4b5047ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maximilienGilet/notification-bundle/zipball/b43dd7264752d2420a490e6135a76abf4b5047ee",
+                "reference": "b43dd7264752d2420a490e6135a76abf4b5047ee",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mgilet\\NotificationBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maximilien Gilet",
+                    "email": "maximilien248@gmail.com"
+                }
+            ],
+            "description": "A simple Symfony 3 bundle for user notifications",
+            "keywords": [
+                "symfony notification bundle simple"
+            ],
+            "time": "2018-06-29T07:38:25+00:00"
         },
         {
             "name": "monolog/monolog",

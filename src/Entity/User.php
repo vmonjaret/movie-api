@@ -154,6 +154,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $followers;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Achievement", mappedBy="users")
+     */
+    private $achievements;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -168,6 +173,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->feeds = new ArrayCollection();
         $this->follows = new ArrayCollection();
         $this->followers = new ArrayCollection();
+        $this->achievements = new ArrayCollection();
     }
 
     public function getId()
@@ -643,6 +649,34 @@ class User implements AdvancedUserInterface, \Serializable
         if ($this->follows->contains($follow)) {
             $this->follows->removeElement($follow);
             $follow->removeFollower($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Achievement[]
+     */
+    public function getAchievements(): Collection
+    {
+        return $this->achievements;
+    }
+
+    public function addAchievement(Achievement $achievement): self
+    {
+        if (!$this->achievements->contains($achievement)) {
+            $this->achievements[] = $achievement;
+            $achievement->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAchievement(Achievement $achievement): self
+    {
+        if ($this->achievements->contains($achievement)) {
+            $this->achievements->removeElement($achievement);
+            $achievement->removeUser($this);
         }
 
         return $this;

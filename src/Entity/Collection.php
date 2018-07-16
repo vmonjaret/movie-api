@@ -11,10 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *     attributes={
-     *     "normalization_context"={"groups"={"collection"}},
-     *     "denormalization_context"={"groups"={"collection_write"}}
- *     }
+ *     normalizationContext={"groups"={"collection"}},
+ *     denormalizationContext={"groups"={"collection_write"}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CollectionRepository")
  */

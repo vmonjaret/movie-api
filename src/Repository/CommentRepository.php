@@ -32,7 +32,7 @@ class CommentRepository extends ServiceEntityRepository
             ->getQuery()
         ;
 
-        return $query->getArrayResult();
+        return $query->getResult();
     }
 
 

@@ -4,11 +4,9 @@ namespace App\Controller\User;
 
 use App\Entity\Feed;
 use App\Entity\Follow;
-use App\Entity\User;
+use App\Utils\NotificationCenter;
 use Doctrine\ORM\EntityManagerInterface;
-use Mgilet\NotificationBundle\Manager\NotificationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,18 +15,19 @@ class AddFollowUser
 
     private $tokenStorage;
     private $em;
-    private $container;
+    private $notificationCenter;
 
     /**
      * AddFollowUser constructor.
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $em
+     * @param NotificationCenter $notificationCenter
      */
-    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $em, ContainerInterface $container)
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $em, NotificationCenter $notificationCenter)
     {
         $this->tokenStorage = $tokenStorage;
         $this->em = $em;
-        $this->container = $container;
+        $this->notificationCenter = $notificationCenter;
     }
 
     /**
@@ -45,12 +44,8 @@ class AddFollowUser
             $user->addFollow($follow);
             $follower = $user->getUsername();
             $followerId = $user->getId();
-            $notificationManager = $this->container->get('mgilet.notification');
-            $notif = $notificationManager->createNotification('Follow');
-            $notif->setMessage("${follower} vous suit")
-                ->setLink("/profile/${followerId}");
 
-            $notificationManager->addNotification(array($follow), $notif, true);
+            $this->notificationCenter->sendNotification($user, "Follow", "${follower} vous suit", "/profile/${followerId}");
 
             $feed = $this->em->getRepository(Feed::class)->findOneBy(array(
                 'user' => $user->getId(),

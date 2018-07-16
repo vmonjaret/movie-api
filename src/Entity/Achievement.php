@@ -25,7 +25,7 @@ class Achievement
     const UNDECIDED = 'undecided';
     const NOOB = 'noob';
     const PADAWAN = 'padawan';
-    const JEDI_MASTER = 'jedi';
+    const JEDI_MASTER = 'jedi_master';
     const AVOCADO = 'avocado';
 
     /**

@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Comment;
+use App\Entity\Movie;
 use App\Entity\User;
 use App\Manager\AchievementManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

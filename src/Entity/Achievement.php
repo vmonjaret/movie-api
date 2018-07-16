@@ -21,6 +21,13 @@ class Achievement
     const AUTHOR = 'author';
     const WRITER = 'writer';
     const STALKER = 'stalker';
+    const JUDGE = 'judge';
+    const UNDECIDED = 'undecided';
+    const NOOB = 'noob';
+    const PADAWAN = 'padawan';
+    const JEDI_MASTER = 'jedi';
+    const AVOCADO = 'avocado';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

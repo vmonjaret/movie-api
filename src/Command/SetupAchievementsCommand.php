@@ -45,6 +45,12 @@ class SetupAchievementsCommand extends Command
             array('name' => 'Stalker', 'description' => 'Consulter un autre profil', 'type' => Achievement::STALKER),
             array('name' => 'Auteur', 'description' => 'Ecrire un commentaire sur un film', 'type' => Achievement::AUTHOR),
             array('name' => 'Ecrivain', 'description' => 'Commentaire de plus de 100 caractères', 'type' => Achievement::WRITER),
+            array('name' => 'Juge', 'description' => 'Noter un film', 'type' => Achievement::JUDGE),
+            array('name' => 'Indécis', 'description' => 'Utiliser le bouton random', 'type' => Achievement::UNDECIDED),
+            array('name' => 'Noob', 'description' => 'Voir 1 film', 'type' => Achievement::NOOB),
+            array('name' => 'Padawan', 'description' => 'Voir 50 films', 'type' => Achievement::PADAWAN),
+            array('name' => 'Maître Jedi', 'description' => 'Voir 100 films', 'type' => Achievement::JEDI_MASTER),
+            array('name' => 'Avocat', 'description' => 'Lire les mentions légales', 'type' => Achievement::AVOCADO)
         );
 
         foreach ($achievements as $achievement) {

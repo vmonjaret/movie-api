@@ -11,17 +11,19 @@ use Doctrine\ORM\EntityManagerInterface;
 class AchievementManager
 {
     private $commentRepository;
-    private $achievementRepostory;
+    private $achievementRepository;
     private $entityManager;
 
     /**
      * AchievementManager constructor.
-     * @param $commentRepository
+     * @param CommentRepository $commentRepository
+     * @param AchievementRepository $achievementRepository
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(CommentRepository $commentRepository, AchievementRepository $achievementRepository, EntityManagerInterface $entityManager)
     {
         $this->commentRepository = $commentRepository;
-        $this->achievementRepostory = $achievementRepository;
+        $this->achievementRepository = $achievementRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -29,11 +31,21 @@ class AchievementManager
     {
         $count = $this->commentRepository->count(array('user' => $user));
 
-        // Achievemnt "auteur" : Write one comment
+        // Achievement "auteur" : Write one comment
         if ($count >= 1) {
-            $badge = $this->achievementRepostory->getUserAchievement($user, Achievement::AUTHOR);
+            $badge = $this->achievementRepository->getUserAchievement($user, Achievement::AUTHOR);
             if (null === $badge) {
-                $badge = $this->achievementRepostory->findOneBy(array('type' => Achievement::AUTHOR));
+                $badge = $this->achievementRepository->findOneBy(array('type' => Achievement::AUTHOR));
+                $user->addAchievement($badge);
+
+                $this->entityManager->flush();
+            }
+        }
+
+        if ($count >= 100) {
+            $badge = $this->achievementRepository->getUserAchievement($user, Achievement::WRITER);
+            if (null === $badge) {
+                $badge = $this->achievementRepository->findOneBy(array('type' => Achievement::WRITER));
                 $user->addAchievement($badge);
 
                 $this->entityManager->flush();

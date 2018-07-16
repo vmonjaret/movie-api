@@ -19,6 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Achievement
 {
     const AUTHOR = 'author';
+    const WRITER = 'writer';
+    const STALKER = 'stalker';
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

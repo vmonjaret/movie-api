@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
@@ -27,6 +29,9 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *     message="Le champs contenu est obligatoire"
+     * )
      * @Groups({"comment", "comment_write", "profile", "feed"})
      */
     private $content;
@@ -78,7 +83,7 @@ class Comment
 
     public function setContent(string $content): self
     {
-        $this->content = $content;
+        $this->content = trim($content);
 
         return $this;
     }

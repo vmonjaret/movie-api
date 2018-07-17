@@ -2,12 +2,7 @@ resources:
   App\Entity\Comment:
     collectionOperations:
       get: ~
-      post:
-        method: post
-        path: /comments
-        controller: App\Controller\Comment\CreateComment
-        swagger_context:
-                  summary: Create a Comment resource (custom post).
+      post: ~
       signaled:
         method: get
         path: /comments/signaled

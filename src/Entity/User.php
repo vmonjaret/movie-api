@@ -28,8 +28,14 @@ use App\Entity\Movie as Movie;
  * @ORM\Table(name="`user`")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @Notifiable(name="`user`")
- * @UniqueEntity("username")
- * @UniqueEntity("email")
+ * @UniqueEntity(
+ *     fields="username",
+ *     message="Un utilisateur avec ce nom d'utilisateur éxiste déjà"
+ *     )
+ * @UniqueEntity(
+ *     fields="email",
+ *     message="Un utilisateur est déjà associé à cet email"
+ *     )
  * @ApiFilter(SearchFilter::class, properties={"username": "partial"})
  */
 class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
@@ -44,14 +50,18 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
 
     /**
      * @Assert\Email()
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message="Le champs 'email' est obligatoire"
+     * )
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"user_write"})
      */
     private $email;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *     message="Le champs 'nom d'utilisateur' est obligatoire"
+     * )
      * @ORM\Column(type="string", length=25, unique=true)
      * @Groups({"user", "comment", "user_write", "profile", "notation", "collection", "feed"})
      */
@@ -64,6 +74,10 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
 
     /**
      * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/",
+     *     message="Votre mot de passe doit avoir 8 caractère dont 1 lettre et 1 chiffre"
+     * )
      * @Groups({"user_write"})
      */
     private $plainPassword;
@@ -192,7 +206,7 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
 
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = trim($email);
 
         return $this;
     }
@@ -204,7 +218,7 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
 
     public function setUsername(string $username): self
     {
-        $this->username = $username;
+        $this->username = trim($username);
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Notation;
 
+use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Entity\Feed;
 use App\Entity\Notation;
 use App\Manager\AchievementManager;
@@ -18,6 +19,7 @@ class AddNotation extends Controller
     private $tokenStorage;
     private $entityManager;
     private $achievementManager;
+    private $validator;
 
     /**
      * Like constructor.
@@ -26,12 +28,15 @@ class AddNotation extends Controller
      * @param EntityManagerInterface $entityManager
      * @param AchievementManager $achievementManager
      */
-    public function __construct(NotationRepository $notationRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager, AchievementManager $achievementManager)
+    public function __construct(NotationRepository $notationRepository, TokenStorageInterface $tokenStorage,
+                                EntityManagerInterface $entityManager, AchievementManager $achievementManager,
+                                ValidatorInterface $validator)
     {
         $this->notationRepository = $notationRepository;
         $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
         $this->achievementManager = $achievementManager;
+        $this->validator = $validator;
     }
 
     /**
@@ -46,6 +51,8 @@ class AddNotation extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $notation = $em->getRepository(Notation::class)->findOneBy(['movie' => $data->getMovie()->getId(), 'user' => $user->getId()]);
+
+        $errors = $this->validator->validate($data);
 
         if ($notation) {
             $notation->setMark($data->getMark());

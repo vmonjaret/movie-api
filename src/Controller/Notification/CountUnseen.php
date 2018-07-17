@@ -2,15 +2,14 @@
 
 namespace App\Controller\Notification;
 
-
-use Doctrine\ORM\EntityManagerInterface;
-use Mgilet\NotificationBundle\Entity\NotifiableNotification;
-use Mgilet\NotificationBundle\Entity\Repository\NotifiableNotificationRepository;
+use App\Entity\Notification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class GetAllNotification
+class CountUnseen
 {
     private $container;
     private $tokenStorage;
@@ -29,12 +28,13 @@ class GetAllNotification
     /**
      * @IsGranted("ROLE_USER")
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-
         $user = $this->tokenStorage->getToken()->getUser();
+        $notification = $request->get('id');
 
         $manager = $this->container->get('mgilet.notification');
-        return $manager->getNotifications($user);
+
+        return new JsonResponse($manager->getUnseenNotificationCount($user));
     }
 }

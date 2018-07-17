@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -28,6 +29,9 @@ class Collection
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le champs 'nom' est obligatoire"
+     * )
      * @Groups({"collection", "collection_write", "feed"})
      */
     private $name;
@@ -81,7 +85,7 @@ class Collection
 
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = trim($name);
 
         return $this;
     }

@@ -47,7 +47,7 @@ class Notation
      *      min = 1,
      *      max = 5,
      *      minMessage = "The mark cannot be equal or inferior to {{ limit }}",
-     *      maxMessage = "he mark cannot be superior to {{ limit }}"
+     *      maxMessage = "The mark cannot be superior to {{ limit }}"
      * )
      * @ORM\Column(name="mark", type="integer")
      * @Groups({"notation", "notation_write", "profile", "feed"})

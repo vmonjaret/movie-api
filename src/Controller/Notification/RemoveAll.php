@@ -8,22 +8,23 @@ use Mgilet\NotificationBundle\Entity\NotifiableNotification;
 use Mgilet\NotificationBundle\Entity\Repository\NotifiableNotificationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class GetAllNotification
+class RemoveAll
 {
-    private $container;
+    private $entityManager;
     private $tokenStorage;
+    private $container;
 
     /**
-     * MarkAsSeen constructor.
-     * @param $container
-     * @param $tokenStorage
+     * GetAllNotification constructor.
      */
-    public function __construct(ContainerInterface $container, TokenStorageInterface $tokenStorage)
+    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, ContainerInterface $container)
     {
-        $this->container = $container;
+        $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
+        $this->container = $container;
     }
 
     /**
@@ -31,10 +32,16 @@ class GetAllNotification
      */
     public function __invoke()
     {
-
         $user = $this->tokenStorage->getToken()->getUser();
 
         $manager = $this->container->get('mgilet.notification');
-        return $manager->getNotifications($user);
+        $notifications = $manager->getNotifications($user);
+        foreach ($notifications as $notification) {
+            $this->entityManager->remove($notification);
+        }
+
+        $this->entityManager->flush();
+
+        return new JsonResponse(null, 204);
     }
 }

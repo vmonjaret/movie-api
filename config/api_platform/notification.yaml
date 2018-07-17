@@ -5,13 +5,20 @@ resources:
         method: get
         path: /notifications
         controller: App\Controller\Notification\GetAllNotification
-
-      mark_as_seen:
+        swagger_context:
+          summary: "Get all users notification"
+      mark_all_as_seen:
         method: get
         path: /notifications/mark_all_as_seen
         controller: App\Controller\Notification\MarkAllAsSeen
-        defaults:
-          _api_receive: false
+        swagger_context:
+          summary: "Mark all notification as seen"
+      count_unseen:
+        method: get
+        path: /notifications/unseen
+        controller: App\Controller\Notification\CountUnseen
+        swagger_context:
+          summary: "Get number of notification not seen"
     itemOperations:
       mark_as_seen:
         method: get
@@ -19,3 +26,13 @@ resources:
         controller: App\Controller\Notification\MarkAsSeen
         defaults:
           _api_receive: false
+
+      remove_all:
+        method: delete
+        path: /notifications/remove_all
+        controller: App\Controller\Notification\RemoveAll
+        defaults:
+          _api_receive: false
+        swagger_context:
+          summary: "Remove all user's notifications"
+          parameters: []

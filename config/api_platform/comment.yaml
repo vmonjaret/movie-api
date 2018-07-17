@@ -8,3 +8,30 @@ resources:
         controller: App\Controller\Comment\CreateComment
         swagger_context:
                   summary: Create a Comment resource (custom post).
+      signaled:
+        method: get
+        path: /comments/signaled
+        controller: App\Controller\Comment\GetSignaledComments
+    itemOperations:
+      get: ~
+      delete:
+        access_control: is_granted("ROLE_ADMIN")
+      signal:
+        method: put
+        path: /comments/{id}/signal
+        controller: App\Controller\Comment\SignalComment
+        swagger_context:
+          summary: Signal a comment
+          parameters:
+          - name: id
+            in: path
+            required: true
+      unsignal:
+        method: put
+        path: /comments/{id}/unsignal
+        controller: App\Controller\Comment\UnsignalComment
+        swagger_context:
+          parameters:
+          - name: id
+            in: path
+            required: true

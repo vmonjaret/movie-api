@@ -35,7 +35,7 @@ class MarkAsSeen
 
         $manager = $this->container->get('mgilet.notification');
         $manager->markAsSeen(
-            $manager->getNotifiableInterface($manager->getNotifiableEntityById($user)),
+            $user,
             $manager->getNotification($notification),
             true
         );

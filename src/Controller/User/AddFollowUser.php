@@ -45,7 +45,7 @@ class AddFollowUser
             $follower = $user->getUsername();
             $followerId = $user->getId();
 
-            $this->notificationCenter->sendNotification($user, "Follow", "${follower} vous suit", "/profile/${followerId}");
+            $this->notificationCenter->sendNotification($follow, "Follow", "${follower} vous suit", "/profile/${followerId}");
 
             $feed = $this->em->getRepository(Feed::class)->findOneBy(array(
                 'user' => $user->getId(),

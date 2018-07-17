@@ -21,6 +21,7 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"comment", "profile", "feed"})
      */
     private $id;
 
@@ -29,6 +30,11 @@ class Comment
      * @Groups({"comment", "comment_write", "profile", "feed"})
      */
     private $content;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $signaled = false;
 
     /**
      * @ORM\Column(type="datetime")
@@ -46,7 +52,6 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @ApiSubresource(maxDepth=1)
      * @Groups({"comment"})
      */
     private $user;
@@ -74,6 +79,18 @@ class Comment
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getSignaled()
+    {
+        return $this->signaled;
+    }
+
+    public function setSignaled($signaled)
+    {
+        $this->signaled = $signaled;
 
         return $this;
     }

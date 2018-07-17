@@ -2,6 +2,7 @@
 
 namespace App\Controller\Movie;
 
+use App\Entity\User;
 use App\Manager\AchievementManager;
 use App\Repository\MovieRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -34,13 +35,12 @@ class GetRandom extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if(!is_string($user)) {
+        if($user instanceof User) {
             $movie = $this->movieRepository->findCustomRandom($user->getId(), $em);
+            $this->achievementManager->movieRandomAchievement($user);
         } else {
             $movie = $this->movieRepository->findRandom($em);
         }
-
-        $this->achievementManager->movieRandomAchievement($user);
 
         return $movie[0];
     }

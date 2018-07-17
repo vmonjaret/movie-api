@@ -3,6 +3,7 @@
 namespace App\Controller\Movie;
 
 use App\Entity\Movie;
+use App\Manager\AchievementManager;
 use App\Repository\MovieRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -14,18 +15,21 @@ class Watch
     private $movieRepository;
     private $tokenStorage;
     private $entityManager;
+    private $achievementManager;
 
     /**
      * Watch constructor.
      * @param MovieRepository $movieRepository
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $entityManager
+     * @param AchievementManager $achievementManager
      */
-    public function __construct(MovieRepository $movieRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager)
+    public function __construct(MovieRepository $movieRepository, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager, AchievementManager $achievementManager)
     {
         $this->movieRepository = $movieRepository;
         $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
+        $this->achievementManager = $achievementManager;
     }
 
     /**
@@ -41,6 +45,7 @@ class Watch
             $user->removeMovieWatched($movie);
         } else {
             $user->addMovieWatched($movie);
+            $this->achievementManager->movieWatchAchievement($user);
         }
 
         $this->entityManager->flush();

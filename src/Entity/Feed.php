@@ -10,8 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *     normalizationContext={"groups"={"feed"}},
  *     order={"createdAt": "DESC"},
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
+ *     paginationItemsPerPage=3
  * )
  * @ORM\Entity(repositoryClass="App\Repository\FeedRepository")
  */

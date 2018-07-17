@@ -1,0 +1,14 @@
+resources:
+  App\Entity\Feed:
+    collectionOperations:
+      get: ~
+      count:
+        method: get
+        controller: App\Controller\Feed\CountFeed
+        path: /feeds/count
+        defaults:
+          _api_receive: false
+        swagger_context:
+          parameters: []
+    itemOperations:
+      get: ~

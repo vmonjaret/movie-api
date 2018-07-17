@@ -30,7 +30,7 @@ use App\Entity\Movie as Movie;
  * @Notifiable(name="`user`")
  * @UniqueEntity(
  *     fields="username",
- *     message="Un utilisateur avec ce nom d'utilisateur éxiste déjà"
+ *     message="Un utilisateur avec ce nom d'utilisateur existe déjà"
  *     )
  * @UniqueEntity(
  *     fields="email",

@@ -79,8 +79,8 @@ class CollectionSubresourceDataProvider implements SubresourceDataProviderInterf
 
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {
-            $queryBuilder->orWhere('o.isPublic = false AND user = :id')
-                ->setParameter('id', $user->getId());
+            $queryBuilder->orWhere('o.isPublic = false AND o.user = :id')
+            ->setParameter('id', $user->getId());
         }
 
         $queryBuilder = $this->buildQuery($identifiers, $context, $queryNameGenerator, $queryBuilder, $alias, \count($context['identifiers']));

@@ -49,7 +49,7 @@ class AchievementSubscriber implements EventSubscriberInterface
         }
 
         if ($object instanceof Comment && Request::METHOD_POST === $method) {
-            $this->achievementManager->commentsAchievement($user, $object);
+
         }
     }
 }

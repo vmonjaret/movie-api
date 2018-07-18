@@ -49,7 +49,9 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
     private $id;
 
     /**
-     * @Assert\Email()
+     * @Assert\Email(
+     *     message="Veuillez saisir un adresse mail valide"
+     * )
      * @Assert\NotBlank(
      *     message="Le champs 'email' est obligatoire"
      * )

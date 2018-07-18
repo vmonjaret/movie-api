@@ -19,7 +19,6 @@ class Feed
     const TYPE_COMMENT = "comment";
     const TYPE_COLLECTION = "collection";
     const TYPE_NOTATION = "notation";
-    const FOLLOW = "follow";
 
     /**
      * @ORM\Id()

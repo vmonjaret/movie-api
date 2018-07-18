@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Achievement;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Repository\AchievementRepository;
 use App\Repository\CommentRepository;
@@ -37,7 +38,7 @@ class AchievementManager
         $this->notationRepository = $notationRepository;
     }
 
-    public function commentsAchievement(User $user)
+    public function commentsAchievement(User $user, Comment $comment)
     {
         $count = $this->commentRepository->count(array('user' => $user));
 
@@ -56,7 +57,7 @@ class AchievementManager
         }
 
         // Achievement "writer" : Write a comment more than 100 character
-        if ($count >= 100) {
+        if (strlen($comment->getContent()) > 100) {
             $badge = $this->achievementRepository->getUserAchievement($user, Achievement::WRITER);
             if (null === $badge) {
                 $badge = $this->achievementRepository->findOneBy(array('type' => Achievement::WRITER));

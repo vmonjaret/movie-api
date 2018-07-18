@@ -50,7 +50,7 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
 
     /**
      * @Assert\Email(
-     *     message="Veuillez saisir un adresse mail valide"
+     *     message="Veuillez saisir une adresse mail valide"
      * )
      * @Assert\NotBlank(
      *     message="Le champs 'email' est obligatoire"
@@ -78,7 +78,7 @@ class User implements AdvancedUserInterface, \Serializable, NotifiableInterface
      * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/",
-     *     message="Votre mot de passe doit avoir 8 caractère dont 1 lettre et 1 chiffre"
+     *     message="Votre mot de passe doit avoir 8 caractères dont 1 lettre et 1 chiffre"
      * )
      * @Groups({"user_write"})
      */

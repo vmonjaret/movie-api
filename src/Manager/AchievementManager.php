@@ -121,7 +121,7 @@ class AchievementManager
 
     public function movieNotationAchievement(User $user)
     {
-        $count = $this->commentRepository->count(array('user' => $user));
+        $count = $this->notationRepository->count(array('user' => $user));
 
         // Achievement "judge" : Rate a movie
         if ($count >= 1) {

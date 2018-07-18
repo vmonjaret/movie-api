@@ -10,13 +10,20 @@
 If you're using docker please run this :
 
 ```bash
+cp .env.dist .env
 docker-compose up -d --build
 docker-compose exec php bash
 ```
+Update `.env` with your informations (if using docker leave default)
 
-Now if you don't use docker it'll be the same flow :
+## Setup
 
-1. Update `.env` with your informations (if using docker leave default)
-2. Install dependencies : `composer install`
-
-// TO COMPLETE
+In your php container (`docker-compose exec php bash`)
+```
+composer install
+php bin/console doctrine:schema:update --force
+# /!\ check that you have a valid TMDB_API_KEY in your .env
+php bin/console movie:import
+php bin/console setup:achievements
+php bin/console setup:admin
+```

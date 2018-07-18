@@ -31,7 +31,6 @@ class CountFeed
 
         $count = 0;
         foreach ($user->getFollows() as $follow) {
-            dump($follow);
             $count += $this->feedRepository->count(array('user' => $follow->getId()));
         }
 

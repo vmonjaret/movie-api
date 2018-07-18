@@ -2,7 +2,10 @@ resources:
   App\Entity\Comment:
     collectionOperations:
       get: ~
-      post: ~
+      post:
+        method: post
+        path: /comments
+        controller: App\Controller\Comment\PostComment
       signaled:
         method: get
         path: /comments/signaled
